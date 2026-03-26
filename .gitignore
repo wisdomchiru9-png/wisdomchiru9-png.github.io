@@ -1,2 +1,9 @@
 keystore/
 *.jks
+android-sdk/
+jdk-17/
+twa/app/build/
+twa/build/
+twa/.gradle/
+twa/*.apk
+twa/*.aab
