@@ -562,10 +562,14 @@ async function checkAudioAvailability() {
   audioAvailable = false;
   audioIndex = null;
   try {
-    const res = await fetch('all-lyrics/audio/index.json', { cache: 'no-store' });
+    const cacheBustedIndexUrl = `all-lyrics/audio/index.json?v=${Date.now()}`;
+    const res = await fetch(cacheBustedIndexUrl, { cache: 'no-store' });
     if (res.ok) {
-      audioIndex = await res.json();
-      audioAvailable = true;
+      const parsed = await res.json();
+      if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+        audioIndex = parsed;
+        audioAvailable = true;
+      }
     }
   } catch (err) {
     audioAvailable = false;
@@ -865,38 +869,14 @@ function parseSongText(text, entry) {
   return { title, ref, meta, body };
 }
 
-function getAudioCandidates(num, entry) {
-  if (audioIndex && typeof audioIndex === 'object') {
-    const fromIndex = audioIndex[String(num)];
-    if (fromIndex) {
-      const list = Array.isArray(fromIndex) ? fromIndex : [fromIndex];
-      return list.map((name) => `all-lyrics/audio/${name}`);
-    }
-  }
-  const candidates = [];
-  const numStr = String(num);
-  const pad3 = numStr.padStart(3, '0');
-
-  const addWithExt = (base) => {
-    candidates.push(`${base}.mp3`);
-    candidates.push(`${base}.m4a`);
-    candidates.push(`${base}.wav`);
-  };
-
-  if (songMap && songMap[num]) {
-    const baseName = songMap[num].replace(/\.txt$/i, '');
-    addWithExt(`all-lyrics/audio/${baseName}`);
-  }
-
-  addWithExt(`all-lyrics/audio/${numStr}`);
-  addWithExt(`all-lyrics/audio/${pad3}`);
-
-  if (entry) {
-    const titleBase = sanitizeFileTitle(entry.title);
-    addWithExt(`all-lyrics/audio/${titleBase}`);
-  }
-
-  return Array.from(new Set(candidates));
+function getAudioCandidates(num) {
+  if (!audioIndex || typeof audioIndex !== 'object') return [];
+  const fromIndex = audioIndex[String(num)];
+  if (!fromIndex) return [];
+  const list = Array.isArray(fromIndex) ? fromIndex : [fromIndex];
+  return list
+    .filter((name) => typeof name === 'string' && name.trim())
+    .map((name) => `all-lyrics/audio/${name.trim()}`);
 }
 
 function loadAudio(num, entry) {
@@ -906,7 +886,13 @@ function loadAudio(num, entry) {
     audioStatus.textContent = 'Audio files are not available yet.';
     return;
   }
-  const sources = getAudioCandidates(num, entry);
+  const sources = getAudioCandidates(num);
+  if (!sources.length) {
+    audioPlayer.removeAttribute('src');
+    audioPlayer.load();
+    audioStatus.textContent = 'Audio is not available for this song yet.';
+    return;
+  }
   let idx = 0;
   const token = ++audioTryToken;
 
@@ -1489,27 +1475,50 @@ async function handleSignIn(provider) {
   try {
     await signInWithRedirect(auth, provider);
   } catch (err) {
-    if (authStatusEl) authStatusEl.textContent = 'Sign-in failed. Please try again.';
+    if (authStatusEl) authStatusEl.textContent = getAuthErrorMessage(err);
   }
+}
+
+function getAuthErrorMessage(err) {
+  const code = err && err.code ? String(err.code) : '';
+  if (code === 'auth/unauthorized-domain') {
+    return 'Sign-in blocked: add this domain in Firebase Authorized domains.';
+  }
+  if (code === 'auth/operation-not-allowed') {
+    return 'Sign-in method is disabled in Firebase Authentication.';
+  }
+  if (code === 'auth/account-exists-with-different-credential') {
+    return 'This email already uses another sign-in method.';
+  }
+  if (code === 'auth/network-request-failed') {
+    return 'Network error. Check internet and try again.';
+  }
+  return 'Sign-in failed. Please try again.';
 }
 
 function initAuth() {
   if (!firebaseReady) {
-    setAuthLocked(false);
+    setAuthLocked(true);
+    if (authStatusEl) authStatusEl.textContent = 'Sign-in is unavailable. Please contact the owner.';
     if (authGoogleBtn) authGoogleBtn.disabled = true;
     if (authFacebookBtn) authFacebookBtn.disabled = true;
     return;
   }
 
-  setAuthLocked(false);
+  setAuthLocked(true);
 
   if (authGoogleBtn) {
     authGoogleBtn.disabled = !authProviders.google;
+    if (!authProviders.google) authGoogleBtn.classList.add('hidden');
     authGoogleBtn.addEventListener('click', () => handleSignIn(googleProvider));
   }
   if (authFacebookBtn) {
     authFacebookBtn.disabled = !authProviders.facebook;
+    if (!authProviders.facebook) authFacebookBtn.classList.add('hidden');
     authFacebookBtn.addEventListener('click', () => handleSignIn(facebookProvider));
+  }
+  if (!authProviders.google && !authProviders.facebook && authStatusEl) {
+    authStatusEl.textContent = 'No sign-in provider is enabled right now.';
   }
   if (signOutBtn) {
     signOutBtn.addEventListener('click', () => {
@@ -1517,15 +1526,17 @@ function initAuth() {
     });
   }
 
-  getRedirectResult(auth).catch(() => {
-    if (authStatusEl) authStatusEl.textContent = 'Sign-in was cancelled.';
+  getRedirectResult(auth).catch((err) => {
+    if (authStatusEl) authStatusEl.textContent = getAuthErrorMessage(err);
   });
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     authUser = user;
     authReady = true;
     updateUserChip(user);
     if (user) {
+      if (authStatusEl) authStatusEl.textContent = 'Loading your songbook...';
+      await ensureAssetsLoaded();
       setAuthLocked(false);
       logSignIn(user);
       if (currentNum) {
@@ -1538,17 +1549,17 @@ function initAuth() {
         localStorage.setItem(seenKey, '1');
       }
     } else {
-      setAuthLocked(false);
+      setAuthLocked(true);
+      if (authStatusEl) authStatusEl.textContent = 'Choose a sign-in method.';
       if (commentListEl) {
-        commentListEl.textContent = 'Shared comments are available when signed in.';
+        commentListEl.textContent = 'Sign in to see shared comments.';
       }
     }
   });
 }
 
 window.addEventListener('load', () => {
-  setAuthLocked(false);
-  ensureAssetsLoaded();
+  setAuthLocked(true);
   initAuth();
 });
 

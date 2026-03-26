@@ -1,10 +1,10 @@
-const CACHE_NAME = 'bek-na-lah-v14';
+const CACHE_NAME = 'bek-na-lah-v15';
 const APP_SHELL = [
   './',
   'index.html',
   'download.html',
   'style.css',
-  'script.js?v=13',
+  'script.js?v=14',
   'firebase-config.js',
   'manifest.json',
   'icons/logo-mark.png',
@@ -70,10 +70,16 @@ self.addEventListener('fetch', (event) => {
     if (event.request.url.startsWith('chrome-extension://')) {
       return fetch(event.request);
     }
+    if (url.origin !== self.location.origin) {
+      return fetch(event.request);
+    }
     if (url.pathname.startsWith('/admin')) {
       return fetch(event.request, { cache: 'no-store' });
     }
     if (url.pathname.endsWith('/script.js')) {
+      return fetch(event.request, { cache: 'no-store' });
+    }
+    if (url.pathname.startsWith('/all-lyrics/audio/')) {
       return fetch(event.request, { cache: 'no-store' });
     }
     if (url.pathname.endsWith('.apk')) {
