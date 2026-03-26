@@ -3,8 +3,10 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.yourcompany.beknalah",
-      "sha256_cert_fingerprints": ["AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99"]
+      "package_name": "com.wisdomchiru.beknalah",
+      "sha256_cert_fingerprints": [
+        "39:E5:B0:84:25:94:61:C3:7D:73:3C:5C:91:04:5A:B2:03:E0:59:5F:59:E3:38:0E:C2:03:76:4C:5C:EE:CC:EA"
+      ]
     }
   }
 ]
