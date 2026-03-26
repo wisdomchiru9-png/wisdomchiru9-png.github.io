@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v9';
+const CACHE_NAME = 'bek-na-lah-v10';
 const APP_SHELL = [
   './',
   'index.html',
@@ -7,9 +7,9 @@ const APP_SHELL = [
   'script.js',
   'firebase-config.js',
   'manifest.json',
-  'icons/logo-mark.svg',
-  'icons/icon-192.svg',
-  'icons/icon-512.svg',
+  'icons/logo-mark.png',
+  'icons/icon-192.png',
+  'icons/icon-512.png',
   'images/qr-download.png',
   'images/qr-apk.png',
   'images/install-guide.svg',
