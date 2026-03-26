@@ -42,6 +42,7 @@ let reactionCountsRemote = {};
 let authUser = null;
 let authReady = false;
 let firebaseReady = false;
+let assetsLoaded = false;
 let speechUtterance = null;
 let speechActive = false;
 let audioTryToken = 0;
@@ -651,6 +652,12 @@ async function loadAssets() {
     }
     showSong(initialNum);
   }
+}
+
+async function ensureAssetsLoaded() {
+  if (assetsLoaded) return;
+  await loadAssets();
+  assetsLoaded = true;
 }
 
 function updateCounts() {
@@ -1480,10 +1487,12 @@ function initAuth() {
     if (user) {
       setAuthLocked(false);
       logSignIn(user);
-      if (currentNum) {
-        loadRemoteComments(currentNum);
-        loadReactionCountsRemote(currentNum);
-      }
+      ensureAssetsLoaded().then(() => {
+        if (currentNum) {
+          loadRemoteComments(currentNum);
+          loadReactionCountsRemote(currentNum);
+        }
+      });
       const seenKey = `lyricsOnboardingSeen_${user.uid}`;
       if (!localStorage.getItem(seenKey)) {
         openOnboarding();
@@ -1499,7 +1508,7 @@ function initAuth() {
 }
 
 window.addEventListener('load', () => {
-  loadAssets();
+  setAuthLocked(true);
   initAuth();
 });
 

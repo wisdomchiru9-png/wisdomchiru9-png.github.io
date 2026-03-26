@@ -139,8 +139,8 @@ body.theme-dark {
 }
 
 .brand-mark img {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   display: block;
 }
 
@@ -181,7 +181,7 @@ body.theme-dark {
 }
 
 body.auth-locked .app {
-  filter: blur(2px);
+  visibility: hidden;
   pointer-events: none;
   user-select: none;
 }
