@@ -7,3 +7,4 @@ twa/build/
 twa/.gradle/
 twa/*.apk
 twa/*.aab
+*.idsig
