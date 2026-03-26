@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v3';
+const CACHE_NAME = 'bek-na-lah-v4';
 const APP_SHELL = [
   './',
   'index.html',
@@ -10,6 +10,7 @@ const APP_SHELL = [
   'icons/icon-192.svg',
   'icons/icon-512.svg',
   'images/qr-download.png',
+  'images/qr-apk.png',
   'images/install-guide.svg',
   'lyrics-data/lyrics.json',
   'lyrics-data/songs-map.json',
