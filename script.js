@@ -46,6 +46,8 @@ let assetsLoaded = false;
 let speechUtterance = null;
 let speechActive = false;
 let audioTryToken = 0;
+let audioAvailable = false;
+let audioIndex = null;
 let readerSettings = {
   fontSize: 1.1,
   lineHeight: 1.8,
@@ -265,7 +267,7 @@ function applyReaderSettings() {
   document.body.classList.toggle('theme-dark', readerSettings.theme === 'dark');
   document.body.classList.toggle('full-view', readerSettings.fullView);
   fontToggleBtn.textContent = readerSettings.fontMode === 'serif' ? 'Serif' : 'Sans';
-  audioPanel.style.display = readerSettings.showAudio ? '' : 'none';
+  audioPanel.style.display = readerSettings.showAudio && audioAvailable ? '' : 'none';
   syncSettingsUI();
 }
 
@@ -275,6 +277,7 @@ function syncSettingsUI() {
   lineHeightRange.value = readerSettings.lineHeight;
   lineHeightValue.textContent = readerSettings.lineHeight.toFixed(2);
   toggleAudio.checked = readerSettings.showAudio;
+  toggleAudio.disabled = !audioAvailable;
   toggleAutoplay.checked = readerSettings.autoPlayNext;
   toggleRemember.checked = readerSettings.rememberLast;
   toggleFullview.checked = readerSettings.fullView;
@@ -555,6 +558,23 @@ function loadGlobalAuthor() {
   }
 }
 
+async function checkAudioAvailability() {
+  audioAvailable = false;
+  audioIndex = null;
+  try {
+    const res = await fetch('all-lyrics/audio/index.json', { cache: 'no-store' });
+    if (res.ok) {
+      audioIndex = await res.json();
+      audioAvailable = true;
+    }
+  } catch (err) {
+    audioAvailable = false;
+  }
+  if (!audioAvailable) {
+    readerSettings.showAudio = false;
+  }
+}
+
 function saveGlobalAuthor() {
   localStorage.setItem('lyricsCommentAuthor', globalCommentAuthor);
 }
@@ -610,6 +630,7 @@ function addRecent(num) {
 
 async function loadAssets() {
   loadReaderSettings();
+  await checkAudioAvailability();
   applyReaderSettings();
   loadFavorites();
   loadRecent();
@@ -845,6 +866,13 @@ function parseSongText(text, entry) {
 }
 
 function getAudioCandidates(num, entry) {
+  if (audioIndex && typeof audioIndex === 'object') {
+    const fromIndex = audioIndex[String(num)];
+    if (fromIndex) {
+      const list = Array.isArray(fromIndex) ? fromIndex : [fromIndex];
+      return list.map((name) => `all-lyrics/audio/${name}`);
+    }
+  }
   const candidates = [];
   const numStr = String(num);
   const pad3 = numStr.padStart(3, '0');
@@ -872,6 +900,12 @@ function getAudioCandidates(num, entry) {
 }
 
 function loadAudio(num, entry) {
+  if (!audioAvailable) {
+    audioPlayer.removeAttribute('src');
+    audioPlayer.load();
+    audioStatus.textContent = 'Audio files are not available yet.';
+    return;
+  }
   const sources = getAudioCandidates(num, entry);
   let idx = 0;
   const token = ++audioTryToken;
@@ -1342,6 +1376,13 @@ lineHeightRange.addEventListener('input', () => {
 });
 
 toggleAudio.addEventListener('change', () => {
+  if (!audioAvailable) {
+    toggleAudio.checked = false;
+    readerSettings.showAudio = false;
+    audioPanel.style.display = 'none';
+    audioStatus.textContent = 'Audio files are not available yet.';
+    return;
+  }
   readerSettings.showAudio = toggleAudio.checked;
   if (!readerSettings.showAudio) {
     audioPlayer.pause();

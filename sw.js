@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v11';
+const CACHE_NAME = 'bek-na-lah-v12';
 const APP_SHELL = [
   './',
   'index.html',
