@@ -1207,7 +1207,7 @@ commentSaveBtn.addEventListener('click', () => {
   if (!currentNum) return;
   saveCommentForSong(currentNum, commentInput.value);
   if (!authUser) {
-    commentMetaEl.textContent = 'Please sign in to share this comment.';
+    commentMetaEl.textContent = 'Saved locally.';
     return;
   }
   submitCommentToCloud();
@@ -1495,13 +1495,13 @@ async function handleSignIn(provider) {
 
 function initAuth() {
   if (!firebaseReady) {
-    setAuthLocked(true);
+    setAuthLocked(false);
     if (authGoogleBtn) authGoogleBtn.disabled = true;
     if (authFacebookBtn) authFacebookBtn.disabled = true;
     return;
   }
 
-  setAuthLocked(true);
+  setAuthLocked(false);
 
   if (authGoogleBtn) {
     authGoogleBtn.disabled = !authProviders.google;
@@ -1528,28 +1528,27 @@ function initAuth() {
     if (user) {
       setAuthLocked(false);
       logSignIn(user);
-      ensureAssetsLoaded().then(() => {
-        if (currentNum) {
-          loadRemoteComments(currentNum);
-          loadReactionCountsRemote(currentNum);
-        }
-      });
+      if (currentNum) {
+        loadRemoteComments(currentNum);
+        loadReactionCountsRemote(currentNum);
+      }
       const seenKey = `lyricsOnboardingSeen_${user.uid}`;
       if (!localStorage.getItem(seenKey)) {
         openOnboarding();
         localStorage.setItem(seenKey, '1');
       }
     } else {
-      setAuthLocked(true);
+      setAuthLocked(false);
       if (commentListEl) {
-        commentListEl.textContent = 'Sign in to see shared comments.';
+        commentListEl.textContent = 'Shared comments are available when signed in.';
       }
     }
   });
 }
 
 window.addEventListener('load', () => {
-  setAuthLocked(true);
+  setAuthLocked(false);
+  ensureAssetsLoaded();
   initAuth();
 });
 
