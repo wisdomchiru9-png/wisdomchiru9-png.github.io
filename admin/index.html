@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bek Na Lah Admin Dashboard</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-header">
+      <div>
+        <h1>Bek Na Lah Admin</h1>
+        <p>Owner dashboard for sign-ins, comments, and reactions.</p>
+      </div>
+      <button id="admin-signout" type="button" class="ghost">Sign out</button>
+    </header>
+
+    <section id="admin-login" class="card">
+      <h2>Sign in to continue</h2>
+      <p>Use the same Google or Facebook account you use for the app.</p>
+      <div class="login-buttons">
+        <button id="admin-google" type="button">Continue with Google</button>
+        <button id="admin-facebook" type="button" class="ghost">Continue with Facebook</button>
+      </div>
+      <div id="admin-login-status" class="muted">Waiting for sign-in.</div>
+    </section>
+
+    <section id="admin-dashboard" class="hidden">
+      <div class="stats-grid">
+        <div class="card">
+          <h3>Today sign-ins</h3>
+          <div id="today-signins" class="stat">0</div>
+          <div class="muted" id="today-date"></div>
+        </div>
+        <div class="card">
+          <h3>Last 7 days</h3>
+          <div id="weekly-signins" class="list"></div>
+        </div>
+      </div>
+
+      <div class="grid-two">
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent comments</h3>
+            <button id="refresh-comments" class="ghost" type="button">Refresh</button>
+          </div>
+          <div id="comment-feed" class="list">Loading...</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent reactions</h3>
+            <button id="refresh-reactions" class="ghost" type="button">Refresh</button>
+          </div>
+          <div id="reaction-feed" class="list">Loading...</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

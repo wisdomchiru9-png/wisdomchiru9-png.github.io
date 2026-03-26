@@ -34,6 +34,14 @@
         </div>
         <button id="settings-btn" class="ghost" type="button">Settings</button>
         <a class="ghost download-link" href="download.html">Download App</a>
+        <div id="user-chip" class="user-chip hidden">
+          <img id="user-avatar" alt="User avatar">
+          <div class="user-info">
+            <div id="user-name">Signed in</div>
+            <div id="user-email"></div>
+          </div>
+          <button id="signout-btn" class="ghost" type="button">Sign out</button>
+        </div>
       </div>
     </header>
 
@@ -97,10 +105,10 @@
             </div>
           </div>
           <div class="comment-panel" id="comment-panel">
-            <div class="comment-header">
-              <div class="comment-title">Comments / Corrections</div>
-              <div class="comment-meta" id="comment-meta">Saved locally.</div>
-            </div>
+          <div class="comment-header">
+            <div class="comment-title">Comments / Corrections</div>
+            <div class="comment-meta" id="comment-meta">Saved locally. Use Save to share with the owner.</div>
+          </div>
             <div class="comment-author">
               <label for="comment-author">Your name</label>
               <div class="comment-author-row">
@@ -109,12 +117,16 @@
               </div>
             </div>
             <textarea id="comment-input" rows="4" placeholder="Write corrections or notes for this song..."></textarea>
-            <div class="comment-actions">
-              <button id="comment-save" type="button">Save</button>
-              <button id="comment-copy" class="ghost" type="button">Copy</button>
-              <button id="comment-clear" class="ghost" type="button">Clear</button>
-            </div>
+          <div class="comment-actions">
+            <button id="comment-save" type="button">Save</button>
+            <button id="comment-copy" class="ghost" type="button">Copy</button>
+            <button id="comment-clear" class="ghost" type="button">Clear</button>
           </div>
+          <div class="comment-feed">
+            <div class="comment-feed-title">Recent comments</div>
+            <div id="comment-list" class="comment-list">Sign in to see shared comments.</div>
+          </div>
+        </div>
         </div>
         <div class="reader-footer">
           <div class="jump">
@@ -137,6 +149,39 @@
         </div>
       </section>
     </main>
+  </div>
+  <div id="auth-gate" class="auth-gate" aria-live="polite">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img src="icons/logo-mark.svg" alt="Bek Na Lah logo">
+        <div>
+          <h2>Welcome to Bek Na Lah Songbook</h2>
+          <p>Please sign in to continue.</p>
+        </div>
+      </div>
+      <div class="auth-buttons">
+        <button id="auth-google" type="button">Continue with Google</button>
+        <button id="auth-facebook" type="button" class="ghost">Continue with Facebook</button>
+      </div>
+      <div id="auth-status" class="auth-status">Choose a sign-in method.</div>
+      <div class="auth-note">We use sign-in to keep the community safe and track comments and reactions.</div>
+    </div>
+  </div>
+  <div id="onboarding-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" id="onboarding-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+      <div class="modal-header">
+        <h2 id="onboarding-title">How to use the app</h2>
+        <button id="onboarding-close" type="button">Close</button>
+      </div>
+      <div class="modal-body">
+        <div id="onboarding-step" class="onboarding-step"></div>
+        <div class="onboarding-actions">
+          <button id="onboarding-prev" class="ghost" type="button">Back</button>
+          <button id="onboarding-next" type="button">Next</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="settings-modal" class="modal" aria-hidden="true">
     <div class="modal-backdrop" id="settings-backdrop"></div>
@@ -210,6 +255,13 @@
             <button id="comment-clear-all" class="ghost" type="button">Clear All</button>
           </div>
         </div>
+        <div class="setting-row privacy-note">
+          <div class="setting-label">Privacy</div>
+          <div class="setting-text">
+            We collect sign-in, comments, and reactions to keep the community safe and improve the songbook.
+            You can contact the owner from the main screen for any concerns.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -229,6 +281,6 @@
     </div>
   </div>
   <button id="exit-fullview" class="floating-exit" type="button">Exit Full View</button>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

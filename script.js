@@ -1,4 +1,31 @@
-﻿let entries = [];
+﻿import { firebaseConfig, adminEmails, authProviders } from './firebase-config.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js';
+import {
+  getAuth,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut
+} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  setDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  serverTimestamp,
+  increment
+} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+let entries = [];
 let filteredEntries = [];
 let songMap = {};
 let lyricsDB = null;
@@ -12,6 +39,10 @@ let commentDirty = false;
 let commentAutoSaveTimer = null;
 let globalCommentAuthor = '';
 let reactions = {};
+let reactionCountsRemote = {};
+let authUser = null;
+let authReady = false;
+let firebaseReady = false;
 let speechUtterance = null;
 let speechActive = false;
 let audioTryToken = 0;
@@ -82,6 +113,22 @@ const toggleFullview = document.getElementById('toggle-fullview');
 const exitFullviewBtn = document.getElementById('exit-fullview');
 const commentExportBtn = document.getElementById('comment-export');
 const commentClearAllBtn = document.getElementById('comment-clear-all');
+const authGate = document.getElementById('auth-gate');
+const authGoogleBtn = document.getElementById('auth-google');
+const authFacebookBtn = document.getElementById('auth-facebook');
+const authStatusEl = document.getElementById('auth-status');
+const userChip = document.getElementById('user-chip');
+const userNameEl = document.getElementById('user-name');
+const userEmailEl = document.getElementById('user-email');
+const userAvatarEl = document.getElementById('user-avatar');
+const signOutBtn = document.getElementById('signout-btn');
+const commentListEl = document.getElementById('comment-list');
+const onboardingModal = document.getElementById('onboarding-modal');
+const onboardingBackdrop = document.getElementById('onboarding-backdrop');
+const onboardingClose = document.getElementById('onboarding-close');
+const onboardingStepEl = document.getElementById('onboarding-step');
+const onboardingPrevBtn = document.getElementById('onboarding-prev');
+const onboardingNextBtn = document.getElementById('onboarding-next');
 
 const searchInput = document.getElementById('search-input');
 const searchClearBtn = document.getElementById('search-clear');
@@ -90,6 +137,27 @@ const nextBtn = document.getElementById('next-btn');
 const randomBtn = document.getElementById('random-btn');
 const jumpInput = document.getElementById('jump-input');
 const jumpBtn = document.getElementById('jump-btn');
+
+const firebaseConfigValid = firebaseConfig &&
+  firebaseConfig.apiKey &&
+  !String(firebaseConfig.apiKey).includes('PASTE_');
+
+let app = null;
+let auth = null;
+let db = null;
+let googleProvider = null;
+let facebookProvider = null;
+
+if (firebaseConfigValid) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  googleProvider = new GoogleAuthProvider();
+  facebookProvider = new FacebookAuthProvider();
+  firebaseReady = true;
+} else if (authStatusEl) {
+  authStatusEl.textContent = 'Firebase setup is missing. Contact the owner.';
+}
 
 function splitTitleRef(raw) {
   let title = raw.trim();
@@ -281,9 +349,195 @@ function saveReactions() {
   localStorage.setItem('lyricsReactions', JSON.stringify(reactions));
 }
 
+function setAuthLocked(locked) {
+  document.body.classList.toggle('auth-locked', locked);
+  if (authGate) {
+    authGate.classList.toggle('hidden', !locked);
+  }
+}
+
+function updateUserChip(user) {
+  if (!userChip) return;
+  if (!user) {
+    userChip.classList.add('hidden');
+    userNameEl.textContent = 'Signed in';
+    userEmailEl.textContent = '';
+    userAvatarEl.removeAttribute('src');
+    return;
+  }
+  userChip.classList.remove('hidden');
+  userNameEl.textContent = user.displayName || 'Signed in';
+  userEmailEl.textContent = user.email || '';
+  if (user.photoURL) {
+    userAvatarEl.src = user.photoURL;
+  } else {
+    userAvatarEl.removeAttribute('src');
+  }
+}
+
+function getDayKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+async function logSignIn(user) {
+  if (!db || !user) return;
+  const dayKey = getDayKey();
+  const providerId = user.providerData && user.providerData[0] ? user.providerData[0].providerId : 'unknown';
+  const docId = `${user.uid}_${dayKey}`;
+  try {
+    await setDoc(doc(db, 'signins', docId), {
+      uid: user.uid,
+      email: user.email || '',
+      name: user.displayName || '',
+      provider: providerId,
+      dayKey,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    // ignore logging errors
+  }
+}
+
+async function loadReactionCountsRemote(num) {
+  if (!db) return;
+  try {
+    const snap = await getDoc(doc(db, 'reactionCounts', String(num)));
+    if (snap.exists()) {
+      reactionCountsRemote[num] = snap.data().counts || {};
+    } else {
+      reactionCountsRemote[num] = {};
+    }
+    renderReactions(num);
+  } catch (err) {
+    // ignore fetch errors
+  }
+}
+
+async function recordReaction(num, emoji) {
+  if (!db || !authUser) return;
+  const countsPath = `counts.${emoji}`;
+  try {
+    await setDoc(doc(db, 'reactionCounts', String(num)), {
+      songNum: num,
+      updatedAt: serverTimestamp(),
+      [countsPath]: increment(1)
+    }, { merge: true });
+    await addDoc(collection(db, 'reactions'), {
+      songNum: num,
+      emoji,
+      uid: authUser.uid,
+      email: authUser.email || '',
+      name: authUser.displayName || '',
+      provider: authUser.providerData && authUser.providerData[0] ? authUser.providerData[0].providerId : 'unknown',
+      createdAt: serverTimestamp()
+    });
+    if (!reactionCountsRemote[num]) reactionCountsRemote[num] = {};
+    reactionCountsRemote[num][emoji] = (reactionCountsRemote[num][emoji] || 0) + 1;
+    renderReactions(num);
+  } catch (err) {
+    // ignore
+  }
+}
+
+async function loadRemoteComments(num) {
+  if (!db || !authUser || !commentListEl) return;
+  commentListEl.textContent = 'Loading shared comments...';
+  try {
+    const q = query(
+      collection(db, 'comments'),
+      where('songNum', '==', num),
+      orderBy('createdAt', 'desc'),
+      limit(5)
+    );
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      commentListEl.textContent = 'No shared comments yet.';
+      return;
+    }
+    commentListEl.innerHTML = '';
+    snap.forEach((docSnap) => {
+      const data = docSnap.data();
+      const item = document.createElement('div');
+      item.className = 'comment-item';
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const name = data.authorName || data.name || 'Anonymous';
+      const when = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : '';
+      meta.textContent = `${name} • ${when}`;
+      const body = document.createElement('div');
+      body.textContent = data.text || '';
+      item.appendChild(meta);
+      item.appendChild(body);
+      commentListEl.appendChild(item);
+    });
+  } catch (err) {
+    commentListEl.textContent = 'Unable to load comments right now.';
+  }
+}
+
+async function submitCommentToCloud() {
+  if (!db || !authUser || !currentNum) return;
+  const text = commentInput.value.trim();
+  if (!text) return;
+  const entry = getEntry(currentNum);
+  try {
+    await addDoc(collection(db, 'comments'), {
+      songNum: currentNum,
+      songTitle: entry ? entry.title : '',
+      text,
+      authorName: commentAuthor.value.trim() || globalCommentAuthor || authUser.displayName || 'Anonymous',
+      uid: authUser.uid,
+      email: authUser.email || '',
+      name: authUser.displayName || '',
+      provider: authUser.providerData && authUser.providerData[0] ? authUser.providerData[0].providerId : 'unknown',
+      createdAt: serverTimestamp()
+    });
+    commentMetaEl.textContent = 'Submitted to owner dashboard.';
+    loadRemoteComments(currentNum);
+  } catch (err) {
+    commentMetaEl.textContent = 'Could not submit. Please try again.';
+  }
+}
+
+const onboardingSteps = [
+  'Search songs by title or number using the search bar.',
+  'Save favorites with the Save button so you can find them quickly.',
+  'Use Share or QR to send a song to friends.',
+  'Leave corrections or notes in the Comments section and tap Save to share.',
+  'Turn on offline mode by opening the app once while online.'
+];
+
+let onboardingIndex = 0;
+
+function openOnboarding() {
+  if (!onboardingModal) return;
+  onboardingIndex = 0;
+  onboardingModal.classList.add('open');
+  onboardingModal.setAttribute('aria-hidden', 'false');
+  renderOnboarding();
+}
+
+function closeOnboarding() {
+  if (!onboardingModal) return;
+  onboardingModal.classList.remove('open');
+  onboardingModal.setAttribute('aria-hidden', 'true');
+}
+
+function renderOnboarding() {
+  if (!onboardingStepEl) return;
+  onboardingStepEl.textContent = onboardingSteps[onboardingIndex] || '';
+  onboardingPrevBtn.disabled = onboardingIndex === 0;
+  onboardingNextBtn.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'Finish' : 'Next';
+}
+
 function renderReactions(num) {
   if (!reactionButtons.length) return;
-  const data = reactions[num] || {};
+  const remote = reactionCountsRemote[num];
+  const data = remote && Object.keys(remote).length ? remote : (reactions[num] || {});
   reactionButtons.forEach((btn) => {
     const emoji = btn.dataset.emoji;
     const count = data && data[emoji] ? data[emoji] : 0;
@@ -319,7 +573,7 @@ function loadCommentForSong(num) {
     const author = entry.author ? ` by ${entry.author}` : '';
     commentMetaEl.textContent = `${formatTimestamp(entry.updatedAt)}${author}`;
   } else {
-    commentMetaEl.textContent = 'Saved locally.';
+    commentMetaEl.textContent = 'Saved locally. Use Save to share with the owner.';
   }
   commentDirty = false;
 }
@@ -341,7 +595,7 @@ function saveCommentForSong(num, text) {
     const author = comments[num].author ? ` by ${comments[num].author}` : '';
     commentMetaEl.textContent = `${formatTimestamp(comments[num].updatedAt)}${author}`;
   } else {
-    commentMetaEl.textContent = 'Saved locally.';
+    commentMetaEl.textContent = 'Saved locally. Use Save to share with the owner.';
   }
   commentDirty = false;
 }
@@ -682,6 +936,8 @@ async function showSong(num) {
   updateCover(entry);
   loadCommentForSong(num);
   renderReactions(num);
+  loadRemoteComments(num);
+  loadReactionCountsRemote(num);
 
   if (readerSettings.rememberLast) {
     localStorage.setItem('lyricsLastSong', String(num));
@@ -910,6 +1166,11 @@ commentAuthorSaveBtn.addEventListener('click', () => {
 commentSaveBtn.addEventListener('click', () => {
   if (!currentNum) return;
   saveCommentForSong(currentNum, commentInput.value);
+  if (!authUser) {
+    commentMetaEl.textContent = 'Please sign in to share this comment.';
+    return;
+  }
+  submitCommentToCloud();
 });
 
 commentCopyBtn.addEventListener('click', async () => {
@@ -948,6 +1209,7 @@ reactionButtons.forEach((btn) => {
     reactions[currentNum][emoji] = (reactions[currentNum][emoji] || 0) + 1;
     saveReactions();
     renderReactions(currentNum);
+    recordReaction(currentNum, emoji);
   });
 });
 
@@ -1026,6 +1288,24 @@ randomBtn.addEventListener('click', randomSong);
 settingsBtn.addEventListener('click', openSettings);
 settingsBackdrop.addEventListener('click', closeSettings);
 settingsClose.addEventListener('click', closeSettings);
+if (onboardingBackdrop) onboardingBackdrop.addEventListener('click', closeOnboarding);
+if (onboardingClose) onboardingClose.addEventListener('click', closeOnboarding);
+if (onboardingPrevBtn) {
+  onboardingPrevBtn.addEventListener('click', () => {
+    onboardingIndex = Math.max(0, onboardingIndex - 1);
+    renderOnboarding();
+  });
+}
+if (onboardingNextBtn) {
+  onboardingNextBtn.addEventListener('click', () => {
+    if (onboardingIndex >= onboardingSteps.length - 1) {
+      closeOnboarding();
+      return;
+    }
+    onboardingIndex = Math.min(onboardingSteps.length - 1, onboardingIndex + 1);
+    renderOnboarding();
+  });
+}
 
 themeSegment.querySelectorAll('button').forEach((button) => {
   button.addEventListener('click', () => {
@@ -1156,7 +1436,77 @@ fontToggleBtn.addEventListener('click', () => {
   saveReaderSettings();
 });
 
-window.addEventListener('load', loadAssets);
+async function handleSignIn(provider) {
+  if (!auth || !provider) return;
+  if (authStatusEl) authStatusEl.textContent = 'Opening sign-in...';
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (err) {
+    if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request')) {
+      await signInWithRedirect(auth, provider);
+      return;
+    }
+    if (authStatusEl) authStatusEl.textContent = 'Sign-in failed. Please try again.';
+  }
+}
+
+function initAuth() {
+  if (!firebaseReady) {
+    setAuthLocked(true);
+    if (authGoogleBtn) authGoogleBtn.disabled = true;
+    if (authFacebookBtn) authFacebookBtn.disabled = true;
+    return;
+  }
+
+  setAuthLocked(true);
+
+  if (authGoogleBtn) {
+    authGoogleBtn.disabled = !authProviders.google;
+    authGoogleBtn.addEventListener('click', () => handleSignIn(googleProvider));
+  }
+  if (authFacebookBtn) {
+    authFacebookBtn.disabled = !authProviders.facebook;
+    authFacebookBtn.addEventListener('click', () => handleSignIn(facebookProvider));
+  }
+  if (signOutBtn) {
+    signOutBtn.addEventListener('click', () => {
+      if (auth) signOut(auth);
+    });
+  }
+
+  getRedirectResult(auth).catch(() => {
+    if (authStatusEl) authStatusEl.textContent = 'Sign-in was cancelled.';
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    authUser = user;
+    authReady = true;
+    updateUserChip(user);
+    if (user) {
+      setAuthLocked(false);
+      logSignIn(user);
+      if (currentNum) {
+        loadRemoteComments(currentNum);
+        loadReactionCountsRemote(currentNum);
+      }
+      const seenKey = `lyricsOnboardingSeen_${user.uid}`;
+      if (!localStorage.getItem(seenKey)) {
+        openOnboarding();
+        localStorage.setItem(seenKey, '1');
+      }
+    } else {
+      setAuthLocked(true);
+      if (commentListEl) {
+        commentListEl.textContent = 'Sign in to see shared comments.';
+      }
+    }
+  });
+}
+
+window.addEventListener('load', () => {
+  loadAssets();
+  initAuth();
+});
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -1165,3 +1515,5 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+
