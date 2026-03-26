@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v7';
+const CACHE_NAME = 'bek-na-lah-v8';
 const APP_SHELL = [
   './',
   'index.html',
@@ -67,6 +67,9 @@ self.addEventListener('fetch', (event) => {
     if (url.protocol !== 'http:' && url.protocol !== 'https:') {
       return fetch(event.request);
     }
+    if (event.request.url.startsWith('chrome-extension://')) {
+      return fetch(event.request);
+    }
     if (url.pathname.startsWith('/admin')) {
       return fetch(event.request, { cache: 'no-store' });
     }
@@ -81,7 +84,11 @@ self.addEventListener('fetch', (event) => {
     try {
       const response = await fetch(event.request);
       if (response && response.status === 200 && response.type === 'basic') {
-        cache.put(event.request, response.clone());
+        try {
+          await cache.put(event.request, response.clone());
+        } catch (err) {
+          // Ignore cache put errors (e.g., chrome-extension requests).
+        }
       }
       return response;
     } catch (err) {
