@@ -5,7 +5,6 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   FacebookAuthProvider,
-  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
   signOut

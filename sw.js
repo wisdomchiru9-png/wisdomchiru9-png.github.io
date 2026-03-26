@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v6';
+const CACHE_NAME = 'bek-na-lah-v7';
 const APP_SHELL = [
   './',
   'index.html',
@@ -64,6 +64,9 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith((async () => {
     const url = new URL(event.request.url);
+    if (url.pathname.startsWith('/admin')) {
+      return fetch(event.request, { cache: 'no-store' });
+    }
     if (url.pathname.endsWith('.apk')) {
       return fetch(event.request);
     }
