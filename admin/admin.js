@@ -31,8 +31,10 @@ const signoutBtn = document.getElementById('admin-signout');
 const todaySigninsEl = document.getElementById('today-signins');
 const todayDateEl = document.getElementById('today-date');
 const weeklySigninsEl = document.getElementById('weekly-signins');
+const signinsListEl = document.getElementById('signins-list');
 const commentFeed = document.getElementById('comment-feed');
 const reactionFeed = document.getElementById('reaction-feed');
+const refreshSigninsBtn = document.getElementById('refresh-signins');
 const refreshCommentsBtn = document.getElementById('refresh-comments');
 const refreshReactionsBtn = document.getElementById('refresh-reactions');
 
@@ -125,6 +127,39 @@ async function loadWeeklySignins() {
   });
 }
 
+async function loadTodaySigninsList() {
+  if (!db || !signinsListEl) return;
+  signinsListEl.textContent = 'Loading...';
+  const todayKey = getDayKey();
+  const q = query(collection(db, 'signins'), where('dayKey', '==', todayKey));
+  const snap = await getDocs(q);
+  if (snap.empty) {
+    signinsListEl.textContent = 'No sign-ins yet today.';
+    return;
+  }
+  const items = [];
+  snap.forEach((docSnap) => items.push(docSnap.data()));
+  items.sort((a, b) => {
+    const at = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
+    const bt = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
+    return bt - at;
+  });
+  signinsListEl.innerHTML = '';
+  items.slice(0, 20).forEach((data) => {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const when = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleTimeString() : '';
+    meta.textContent = `${data.provider || 'unknown'} • ${when}`;
+    const body = document.createElement('div');
+    body.textContent = data.email || data.name || data.uid || 'User';
+    item.appendChild(meta);
+    item.appendChild(body);
+    signinsListEl.appendChild(item);
+  });
+}
+
 function renderFeed(container, items, format) {
   container.innerHTML = '';
   if (!items.length) {
@@ -172,7 +207,13 @@ async function loadRecentReactions() {
 }
 
 async function refreshDashboard() {
-  await Promise.all([loadTodaySignins(), loadWeeklySignins(), loadRecentComments(), loadRecentReactions()]);
+  await Promise.all([
+    loadTodaySignins(),
+    loadWeeklySignins(),
+    loadTodaySigninsList(),
+    loadRecentComments(),
+    loadRecentReactions()
+  ]);
 }
 
 async function handleSignIn(provider) {
@@ -194,6 +235,8 @@ function initAuth() {
 
   googleBtn.disabled = !authProviders.google;
   facebookBtn.disabled = !authProviders.facebook;
+  if (!authProviders.google) googleBtn.classList.add('hidden');
+  if (!authProviders.facebook) facebookBtn.classList.add('hidden');
   googleBtn.addEventListener('click', () => handleSignIn(googleProvider));
   facebookBtn.addEventListener('click', () => handleSignIn(facebookProvider));
   signoutBtn.addEventListener('click', () => signOut(auth));
@@ -207,8 +250,7 @@ function initAuth() {
       loginPanel.classList.add('hidden');
       dashboard.classList.remove('hidden');
       loginStatus.textContent = 'Signed in.';
-      ensureAdminRecord(user);
-      refreshDashboard();
+      ensureAdminRecord(user).then(refreshDashboard);
       return;
     }
     dashboard.classList.add('hidden');
@@ -224,5 +266,6 @@ function initAuth() {
 
 refreshCommentsBtn.addEventListener('click', loadRecentComments);
 refreshReactionsBtn.addEventListener('click', loadRecentReactions);
+if (refreshSigninsBtn) refreshSigninsBtn.addEventListener('click', loadTodaySigninsList);
 
 initAuth();
