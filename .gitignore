@@ -5,6 +5,8 @@ jdk-17/
 twa/app/build/
 twa/build/
 twa/.gradle/
+twa/.gradle-cache/
+twa/local.properties
 twa/*.apk
 twa/*.aab
 *.idsig

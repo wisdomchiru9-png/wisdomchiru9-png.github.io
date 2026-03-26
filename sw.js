@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v2';
+const CACHE_NAME = 'bek-na-lah-v3';
 const APP_SHELL = [
   './',
   'index.html',
@@ -6,8 +6,11 @@ const APP_SHELL = [
   'style.css',
   'script.js',
   'manifest.json',
+  'icons/logo-mark.svg',
   'icons/icon-192.svg',
   'icons/icon-512.svg',
+  'images/qr-download.png',
+  'images/install-guide.svg',
   'lyrics-data/lyrics.json',
   'lyrics-data/songs-map.json',
   'all-lyrics/index.txt'

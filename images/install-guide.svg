@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8f2ea"/>
+      <stop offset="100%" stop-color="#efe3d3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" rx="48" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1120" height="720" rx="40" fill="#ffffff" opacity="0.8"/>
+
+  <text x="100" y="150" font-size="48" font-family="Georgia, serif" fill="#1f1b16" font-weight="700">Install Bek Na Lah Songbook</text>
+  <text x="100" y="200" font-size="22" font-family="Trebuchet MS, sans-serif" fill="#5b4c41">No Play Store needed. Just follow these steps.</text>
+
+  <g>
+    <rect x="100" y="250" width="1000" height="130" rx="24" fill="#f7f0e6" stroke="#e0d3c1"/>
+    <circle cx="150" cy="315" r="34" fill="#c0643b"/>
+    <text x="150" y="325" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#ffffff" font-weight="700">1</text>
+    <text x="220" y="300" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#1f1b16" font-weight="700">Open the download page</text>
+    <text x="220" y="335" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#5b4c41">Go to wisdomchiru9-png.github.io/download.html</text>
+  </g>
+
+  <g>
+    <rect x="100" y="410" width="1000" height="130" rx="24" fill="#f7f0e6" stroke="#e0d3c1"/>
+    <circle cx="150" cy="475" r="34" fill="#1f6f66"/>
+    <text x="150" y="485" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#ffffff" font-weight="700">2</text>
+    <text x="220" y="460" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#1f1b16" font-weight="700">Tap Download APK</text>
+    <text x="220" y="495" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#5b4c41">If asked, allow installs from unknown apps for your browser.</text>
+  </g>
+
+  <g>
+    <rect x="100" y="570" width="1000" height="130" rx="24" fill="#f7f0e6" stroke="#e0d3c1"/>
+    <circle cx="150" cy="635" r="34" fill="#c0643b"/>
+    <text x="150" y="645" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#ffffff" font-weight="700">3</text>
+    <text x="220" y="620" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#1f1b16" font-weight="700">Install and open the app</text>
+    <text x="220" y="655" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#5b4c41">Open it once while online so it works offline later.</text>
+  </g>
+</svg>

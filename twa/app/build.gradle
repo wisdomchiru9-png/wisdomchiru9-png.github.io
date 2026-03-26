@@ -24,8 +24,8 @@ def twaManifest = [
     applicationId: 'com.wisdomchiru.beknalah',
     hostName: 'wisdomchiru9-png.github.io', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Bek Na Lah', // The application name.
-    launcherName: 'Bek Na Lah', // The name shown on the Android Launcher.
+    name: 'Bek Na Lah Songbook', // The application name.
+    launcherName: 'Bek Na Lah Songbook', // The name shown on the Android Launcher.
     themeColor: '#C0643B', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.
@@ -42,7 +42,7 @@ def twaManifest = [
     shortcuts: [],
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
     splashScreenFadeOutDuration: 300,
-    generatorApp: 'unknown', // Application that generated the Android Project
+    generatorApp: 'bubblewrap-cli', // Application that generated the Android Project
     // The fallback strategy for when Trusted Web Activity is not available. Possible values are
     // 'customtabs' and 'webview'.
     fallbackType: 'customtabs',
@@ -57,8 +57,8 @@ android {
         applicationId "com.wisdomchiru.beknalah"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 1
-        versionName "1"
+        versionCode 4
+        versionName "4"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name

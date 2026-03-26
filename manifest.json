@@ -1,12 +1,12 @@
 ﻿{
-  "name": "Bek Na Lah",
+  "name": "Bek Na Lah Songbook",
   "short_name": "Bek Na Lah",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f0e6da",
   "theme_color": "#c0643b",
-  "description": "Bek Na Lah - Chiru tribe gospel lyrics book.",
+  "description": "Bek Na Lah Songbook - Chiru tribe gospel lyrics book.",
   "icons": [
     {
       "src": "icons/icon-192.svg",

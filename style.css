@@ -138,6 +138,12 @@ body.theme-dark {
   box-shadow: 0 12px 22px rgba(0, 0, 0, 0.22), inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
 
+.brand-mark img {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
 .brand-text h1 {
   margin: 0;
   font-size: 2rem;
@@ -1153,6 +1159,23 @@ body.full-view .floating-exit {
   padding: 12px 14px;
   display: grid;
   gap: 8px;
+}
+
+.download-qr,
+.download-guide {
+  width: min(320px, 100%);
+  border-radius: 16px;
+  border: 1px solid var(--paper-strong);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px;
+  justify-self: start;
+}
+
+.download-guide {
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 .download-footer {
