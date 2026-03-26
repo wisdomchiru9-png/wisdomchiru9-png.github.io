@@ -64,6 +64,9 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith((async () => {
     const url = new URL(event.request.url);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return fetch(event.request);
+    }
     if (url.pathname.startsWith('/admin')) {
       return fetch(event.request, { cache: 'no-store' });
     }
