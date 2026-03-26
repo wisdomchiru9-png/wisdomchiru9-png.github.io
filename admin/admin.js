@@ -178,14 +178,10 @@ async function refreshDashboard() {
 
 async function handleSignIn(provider) {
   if (!auth || !provider) return;
-  loginStatus.textContent = 'Opening sign-in...';
+  loginStatus.textContent = 'Redirecting to sign-in...';
   try {
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch (err) {
-    if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request')) {
-      await signInWithRedirect(auth, provider);
-      return;
-    }
     loginStatus.textContent = 'Sign-in failed.';
   }
 }

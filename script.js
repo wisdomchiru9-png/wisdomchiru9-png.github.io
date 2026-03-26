@@ -1438,14 +1438,10 @@ fontToggleBtn.addEventListener('click', () => {
 
 async function handleSignIn(provider) {
   if (!auth || !provider) return;
-  if (authStatusEl) authStatusEl.textContent = 'Opening sign-in...';
+  if (authStatusEl) authStatusEl.textContent = 'Redirecting to sign-in...';
   try {
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch (err) {
-    if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request')) {
-      await signInWithRedirect(auth, provider);
-      return;
-    }
     if (authStatusEl) authStatusEl.textContent = 'Sign-in failed. Please try again.';
   }
 }
