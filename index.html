@@ -1,0 +1,231 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bek Na Lah</title>
+  <meta name="theme-color" content="#c0643b">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">CL</div>
+        <div class="brand-text">
+          <h1>Bek Na Lah</h1>
+          <p id="song-count">Loading songs...</p>
+          <p class="credit">Created by Wisdom Chiru</p>
+          <p class="secure-note">This song book is for the Chiru tribe gospel songs. Please keep it respectful and secure.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="search">
+          <input id="search-input" type="text" placeholder="Search title or number">
+          <button id="search-clear" type="button">Clear</button>
+        </div>
+        <div class="quick-nav">
+          <button id="prev-btn" type="button">Prev</button>
+          <button id="random-btn" type="button">Random</button>
+          <button id="next-btn" type="button">Next</button>
+        </div>
+        <button id="settings-btn" class="ghost" type="button">Settings</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div>
+            <div class="sidebar-title">Index</div>
+            <div class="sidebar-meta"><span id="index-count">0</span> shown</div>
+          </div>
+          <div class="sidebar-actions">
+            <button id="favorites-toggle" class="toggle" type="button">Favorites</button>
+            <button id="export-btn" class="ghost" type="button">Export</button>
+          </div>
+        </div>
+        <ul id="index-list" class="index-list"></ul>
+
+        <div class="recent">
+          <div class="recent-header">
+            <div class="recent-title">Recently Viewed</div>
+            <div class="recent-meta"><span id="recent-count">0</span></div>
+          </div>
+          <ul id="recent-list" class="recent-list"></ul>
+        </div>
+      </aside>
+
+      <section class="reader">
+        <div class="reader-card">
+          <div class="reader-header">
+            <div class="reader-left">
+              <div class="cover-art" id="cover-art"></div>
+              <div>
+                <div class="song-number" id="song-number">No. 1</div>
+                <div class="song-title" id="song-title">Loading...</div>
+              </div>
+            </div>
+            <div class="reader-tools">
+              <button id="favorite-btn" class="favorite-btn" type="button">Save</button>
+              <button id="share-btn" class="ghost" type="button">Share</button>
+              <button id="qr-btn" class="ghost" type="button">QR</button>
+              <button id="read-btn" class="ghost" type="button">Read</button>
+              <div class="song-ref" id="song-ref"></div>
+            </div>
+          </div>
+          <div class="song-meta" id="song-meta"></div>
+          <div class="audio-panel" id="audio-panel">
+            <div class="audio-label">Audio</div>
+            <audio id="audio-player" controls></audio>
+            <div class="audio-status" id="audio-status">Audio not loaded yet.</div>
+          </div>
+          <pre class="song-body" id="song-body"></pre>
+          <div class="reaction-panel" id="reaction-panel">
+            <div class="reaction-title">Reactions</div>
+            <div class="reaction-buttons">
+              <button class="reaction-btn" data-emoji="🙏"><span class="emoji">🙏</span><span class="count">0</span></button>
+              <button class="reaction-btn" data-emoji="❤️"><span class="emoji">❤️</span><span class="count">0</span></button>
+              <button class="reaction-btn" data-emoji="🎶"><span class="emoji">🎶</span><span class="count">0</span></button>
+              <button class="reaction-btn" data-emoji="🙌"><span class="emoji">🙌</span><span class="count">0</span></button>
+              <button class="reaction-btn" data-emoji="🔥"><span class="emoji">🔥</span><span class="count">0</span></button>
+              <button class="reaction-btn" data-emoji="✨"><span class="emoji">✨</span><span class="count">0</span></button>
+            </div>
+          </div>
+          <div class="comment-panel" id="comment-panel">
+            <div class="comment-header">
+              <div class="comment-title">Comments / Corrections</div>
+              <div class="comment-meta" id="comment-meta">Saved locally.</div>
+            </div>
+            <div class="comment-author">
+              <label for="comment-author">Your name</label>
+              <div class="comment-author-row">
+                <input id="comment-author" type="text" placeholder="Name (optional)">
+                <button id="comment-author-save" type="button">Set Default</button>
+              </div>
+            </div>
+            <textarea id="comment-input" rows="4" placeholder="Write corrections or notes for this song..."></textarea>
+            <div class="comment-actions">
+              <button id="comment-save" type="button">Save</button>
+              <button id="comment-copy" class="ghost" type="button">Copy</button>
+              <button id="comment-clear" class="ghost" type="button">Clear</button>
+            </div>
+          </div>
+        </div>
+        <div class="reader-footer">
+          <div class="jump">
+            <label for="jump-input">Jump to</label>
+            <input id="jump-input" type="number" min="1" placeholder="No.">
+            <button id="jump-btn" type="button">Go</button>
+          </div>
+          <div class="reader-controls">
+            <div class="control-group">
+              <button id="font-decrease" type="button">A-</button>
+              <button id="font-increase" type="button">A+</button>
+            </div>
+            <div class="control-group">
+              <button id="line-decrease" type="button">Line -</button>
+              <button id="line-increase" type="button">Line +</button>
+            </div>
+            <button id="font-toggle" type="button">Serif</button>
+          </div>
+          <div class="reader-hint">Use left and right arrows to move, or search by title.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="settings-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" id="settings-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal-header">
+        <h2 id="settings-title">Settings</h2>
+        <button id="settings-close" type="button">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="owner-badge">Presented by Wisdom Chiru</div>
+        <div class="setting-row">
+          <div class="setting-label">Theme</div>
+          <div class="segmented" id="theme-segment">
+            <button type="button" data-theme="light">Light</button>
+            <button type="button" data-theme="dark">Dark</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Font</div>
+          <div class="segmented" id="font-segment">
+            <button type="button" data-font="serif">Serif</button>
+            <button type="button" data-font="sans">Sans</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Font size</div>
+          <div class="range">
+            <input id="font-size-range" type="range" min="0.9" max="1.6" step="0.05">
+            <span id="font-size-value">1.1</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Line spacing</div>
+          <div class="range">
+            <input id="line-height-range" type="range" min="1.4" max="2.4" step="0.05">
+            <span id="line-height-value">1.8</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Show audio</div>
+          <label class="switch">
+            <input id="toggle-audio" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Auto-play next</div>
+          <label class="switch">
+            <input id="toggle-autoplay" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Remember last song</div>
+          <label class="switch">
+            <input id="toggle-remember" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Full view</div>
+          <label class="switch">
+            <input id="toggle-fullview" type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">Comments</div>
+          <div class="setting-actions">
+            <button id="comment-export" type="button">Export</button>
+            <button id="comment-clear-all" class="ghost" type="button">Clear All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="qr-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" id="qr-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="qr-title">
+      <div class="modal-header">
+        <h2 id="qr-title">Share QR</h2>
+        <button id="qr-close" type="button">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-box">
+          <img id="qr-image" alt="QR code">
+        </div>
+        <div class="qr-caption" id="qr-caption"></div>
+      </div>
+    </div>
+  </div>
+  <button id="exit-fullview" class="floating-exit" type="button">Exit Full View</button>
+  <script src="script.js"></script>
+</body>
+</html>
