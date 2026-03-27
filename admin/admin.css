@@ -22,7 +22,11 @@ body {
 .admin-shell {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 32px 24px 56px;
+  padding:
+    calc(32px + var(--safe-top))
+    calc(24px + var(--safe-right))
+    calc(56px + var(--safe-bottom))
+    calc(24px + var(--safe-left));
 }
 
 .admin-header {
@@ -636,7 +640,11 @@ body {
 
 @media (max-width: 860px) {
   .admin-shell {
-    padding: 24px 16px 48px;
+    padding:
+      calc(24px + var(--safe-top))
+      calc(16px + var(--safe-right))
+      calc(48px + var(--safe-bottom))
+      calc(16px + var(--safe-left));
   }
 
   .admin-header,

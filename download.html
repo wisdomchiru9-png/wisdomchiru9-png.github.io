@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Bek Na Lah Songbook - Download</title>
   <meta name="theme-color" content="#c0643b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Bek Na Lah">
+  <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="download-page">
@@ -17,7 +22,7 @@
         </div>
         <div class="download-brand-text">
           <h1>Bek Na Lah Songbook</h1>
-          <p>Scan the QR code or tap install to get the Android app.</p>
+          <p>Scan the QR code or use the install steps for iPhone, iPad, or Android.</p>
         </div>
       </div>
       <a class="ghost download-link" href="index.html">Back to App</a>
@@ -27,36 +32,48 @@
       <section class="download-card download-hero-card">
         <div class="download-install-grid">
           <div class="download-install-copy">
-            <div class="download-kicker">Android APK</div>
-            <h2>Scan or tap to install</h2>
-            <p>Use the install button on this phone, or scan the QR code on another phone to open this install page there.</p>
+            <div id="platform-hero-kicker" class="download-kicker">Android APK</div>
+            <h2 id="platform-hero-title">Scan or tap to install</h2>
+            <p id="platform-hero-copy">Use the install button on this phone, or scan the QR code on another phone to open this install page there.</p>
             <div class="download-actions">
-              <a class="download-button" href="install-apk.html">Install APK</a>
+              <a id="platform-primary-action" class="download-button" href="install-apk.html">Install APK</a>
               <a class="ghost download-link secondary-link" href="index.html">Open Songbook</a>
             </div>
             <div class="download-note">
-              <h3>Allow installs when Android asks</h3>
+              <h3 id="platform-secondary-title">Allow installs when Android asks</h3>
               <ol class="download-steps">
-                <li>Open Settings and go to Security or Apps.</li>
-                <li>Open Install unknown apps and allow your browser or files app.</li>
-                <li>Open the APK from Downloads and confirm install.</li>
+                <li id="platform-step-1">Open Settings and go to Security or Apps.</li>
+                <li id="platform-step-2">Open Install unknown apps and allow your browser or files app.</li>
+                <li id="platform-step-3">Open the APK from Downloads and confirm install.</li>
               </ol>
             </div>
           </div>
           <div class="download-qr-panel">
-            <div class="download-qr-title">Scan to open this install page</div>
+            <div id="platform-qr-title" class="download-qr-title">Scan to open this install page</div>
             <img class="download-qr" src="images/qr-download.png" alt="QR code for APK install page">
-            <p>After scanning on another phone, tap <strong>Install APK</strong>.</p>
+            <p id="platform-qr-copy">After scanning on another phone, tap <strong>Install APK</strong>.</p>
           </div>
         </div>
       </section>
 
+      <section id="ios-install-card" class="download-card">
+        <h2>Install on iPhone or iPad</h2>
+        <p>iPhone and iPad do not install APK files. Use Safari and add the songbook to your Home Screen instead.</p>
+        <ol class="download-steps">
+          <li>Open this site in <strong>Safari</strong>.</li>
+          <li>Tap the <strong>Share</strong> button.</li>
+          <li>Choose <strong>Add to Home Screen</strong>.</li>
+          <li>Open the new icon from your Home Screen like a normal app.</li>
+        </ol>
+      </section>
+
       <section class="download-card">
-        <h2>Install from the website (recommended)</h2>
+        <h2>Install from the website</h2>
         <p>This keeps the app updated automatically and works offline after the first load.</p>
         <ol class="download-steps">
-          <li>Open this site in Chrome or Edge on Android.</li>
-          <li>Tap the menu (three dots) and choose "Install app" or "Add to Home screen".</li>
+          <li>On Android, open this site in Chrome or Edge.</li>
+          <li>Tap the menu and choose "Install app" or "Add to Home screen".</li>
+          <li>On iPhone or iPad, use Safari and choose "Add to Home Screen" from Share.</li>
           <li>Open the new app icon on your home screen.</li>
         </ol>
       </section>
@@ -77,5 +94,7 @@
       Need help? Visit the main app and use the Settings button to contact the owner.
     </footer>
   </div>
+
+  <script src="download.js"></script>
 </body>
 </html>

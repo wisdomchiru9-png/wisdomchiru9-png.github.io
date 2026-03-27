@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Bek Na Lah Songbook - Install APK</title>
   <meta name="theme-color" content="#c0643b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Bek Na Lah">
+  <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="download-page">
@@ -17,14 +22,14 @@
         </div>
         <div class="download-brand-text">
           <h1>Bek Na Lah Songbook</h1>
-          <p>Your APK download is starting.</p>
+          <p id="install-page-subtitle">Your APK download is starting.</p>
         </div>
       </div>
       <a class="ghost download-link" href="download.html">Back to Install Page</a>
     </header>
 
     <main class="download-main">
-      <section class="download-card apk-redirect-card">
+      <section id="apk-start-card" class="download-card apk-redirect-card">
         <div class="download-kicker">Android APK</div>
         <h2>Preparing your install</h2>
         <p>If the APK download does not start automatically, tap the button below.</p>
@@ -41,6 +46,24 @@
           </ol>
         </div>
       </section>
+
+      <section id="ios-apk-block-card" class="download-card apk-redirect-card is-hidden">
+        <div class="download-kicker">iPhone and iPad</div>
+        <h2>Use Home Screen install on iPhone</h2>
+        <p>APK files do not install on iPhone or iPad. Open the songbook in Safari and add it to your Home Screen instead.</p>
+        <div class="download-actions">
+          <a class="download-button" href="download.html#ios-install-card">See iPhone Steps</a>
+          <a class="ghost download-link secondary-link" href="index.html">Open Songbook</a>
+        </div>
+        <div class="download-note">
+          <h3>Safari install steps</h3>
+          <ol class="download-steps">
+            <li>Open this site in Safari.</li>
+            <li>Tap Share.</li>
+            <li>Choose Add to Home Screen.</li>
+          </ol>
+        </div>
+      </section>
     </main>
 
     <footer class="download-footer">
@@ -48,10 +71,6 @@
     </footer>
   </div>
 
-  <script>
-    window.setTimeout(() => {
-      window.location.href = 'https://github.com/wisdomchiru9-png/wisdomchiru9-png.github.io/releases/download/v4.0.1/bek-nah-lah.apk';
-    }, 600);
-  </script>
+  <script src="download.js"></script>
 </body>
 </html>

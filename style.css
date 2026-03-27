@@ -22,6 +22,10 @@
   --song-font-size: 1.1rem;
   --song-line-height: 1.8;
   --song-font-family: var(--font-serif);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
   --bg-main: radial-gradient(circle at top left, #fbe1b3 0%, rgba(251, 225, 179, 0) 45%),
               radial-gradient(circle at 20% 80%, #d8e3ea 0%, rgba(216, 227, 234, 0) 45%),
               linear-gradient(135deg, #f8f2ea 0%, #f0e6da 100%);
@@ -101,7 +105,11 @@ body.theme-dark {
 
 .app {
   min-height: 100vh;
-  padding: 32px 24px 40px;
+  padding:
+    calc(32px + var(--safe-top))
+    calc(24px + var(--safe-right))
+    calc(40px + var(--safe-bottom))
+    calc(24px + var(--safe-left));
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -1081,7 +1089,11 @@ body.full-view .floating-exit {
 
 @media (max-width: 640px) {
   .app {
-    padding: 20px 16px 28px;
+    padding:
+      calc(20px + var(--safe-top))
+      calc(16px + var(--safe-right))
+      calc(28px + var(--safe-bottom))
+      calc(16px + var(--safe-left));
   }
 
   .search input {
@@ -1117,9 +1129,17 @@ body.full-view .floating-exit {
 
 .download-shell {
   min-height: 100vh;
-  padding: 32px 24px 40px;
+  padding:
+    calc(32px + var(--safe-top))
+    calc(24px + var(--safe-right))
+    calc(40px + var(--safe-bottom))
+    calc(24px + var(--safe-left));
   display: grid;
   gap: 24px;
+}
+
+.is-hidden {
+  display: none !important;
 }
 
 .download-header {
@@ -1307,7 +1327,11 @@ body.full-view .floating-exit {
 
 @media (max-width: 640px) {
   .download-shell {
-    padding: 20px 16px 28px;
+    padding:
+      calc(20px + var(--safe-top))
+      calc(16px + var(--safe-right))
+      calc(28px + var(--safe-bottom))
+      calc(16px + var(--safe-left));
   }
 
   .download-install-grid {

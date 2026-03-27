@@ -101,10 +101,13 @@ function getRequiredFiles() {
   return [
     'index.html',
     'download.html',
+    'install-apk.html',
     'script.js',
+    'download.js',
     'style.css',
     'sw.js',
     'manifest.json',
+    'apple-touch-icon.png',
     'build-android.cmd',
     '.well-known/assetlinks.json',
     'admin/index.html',
@@ -163,7 +166,7 @@ function checkManifestSync() {
 }
 
 function checkJavaScriptSyntax() {
-  const files = ['script.js', 'admin/admin.js', 'sw.js'];
+  const files = ['script.js', 'download.js', 'admin/admin.js', 'sw.js'];
   const broken = [];
   const fallbackFiles = [];
 

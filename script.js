@@ -297,10 +297,11 @@ const onboardingSteps = [
   'Use Share or QR to send the current song to family, friends, or the church team.',
   'Write notes or corrections in the Notes section. They stay saved locally on this device.',
   'Open Settings any time to change the theme, font, spacing, and reading view.',
+  'On iPhone or iPad, open this site in Safari and use Share > Add to Home Screen. On Android, use Install app or Add to Home screen.',
   'Open the app once while online so the songbook can stay available offline later.'
 ];
 
-const ONBOARDING_STORAGE_KEY = 'lyricsOnboardingSeen_v2';
+const ONBOARDING_STORAGE_KEY = 'lyricsOnboardingSeen_v3';
 let onboardingIndex = 0;
 
 function openOnboarding() {
