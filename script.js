@@ -521,7 +521,13 @@ function renderRecent() {
     if (!entry) return;
     const item = document.createElement('li');
     item.className = 'recent-item';
-    item.innerHTML = `<span>${num}. ${escapeHtml(entry.title)}</span><span>Open</span>`;
+    item.innerHTML = `
+      <span class="recent-song">
+        <span class="recent-num">#${num}</span>
+        <span class="recent-name">${escapeHtml(entry.title)}</span>
+      </span>
+      <span class="recent-action">Open</span>
+    `;
     item.addEventListener('click', () => showSong(num));
     recentListEl.appendChild(item);
   });
