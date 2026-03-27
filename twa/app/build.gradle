@@ -26,6 +26,8 @@ def twaManifest = [
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Bek Na Lah Songbook', // The application name.
     launcherName: 'Bek Na Lah Songbook', // The name shown on the Android Launcher.
+    versionCode: 5,
+    versionName: '4.0.1',
     themeColor: '#C0643B', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.
@@ -50,15 +52,33 @@ def twaManifest = [
     orientation: 'default',
 ]
 
+def defaultReleaseKeystore = new File(rootProject.projectDir.parentFile, 'keystore/beknalah-release.jks')
+def releaseKeystorePath = System.getenv('BEKNALAH_KEYSTORE_FILE') ?: defaultReleaseKeystore.absolutePath
+def releaseKeystore = file(releaseKeystorePath)
+def releaseKeyAlias = System.getenv('BEKNALAH_KEY_ALIAS') ?: 'beknalah'
+def releaseStorePassword = System.getenv('BEKNALAH_KEYSTORE_PASSWORD') ?: System.getenv('BUBBLEWRAP_KEYSTORE_PASSWORD')
+def releaseKeyPassword = System.getenv('BEKNALAH_KEY_PASSWORD') ?: System.getenv('BUBBLEWRAP_KEY_PASSWORD') ?: releaseStorePassword
+def hasReleaseSigning = releaseKeystore.exists() && releaseStorePassword && releaseKeyPassword
+
 android {
     compileSdkVersion 36
     namespace "com.wisdomchiru.beknalah"
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile releaseKeystore
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
     defaultConfig {
         applicationId "com.wisdomchiru.beknalah"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 4
-        versionName "4"
+        versionCode twaManifest.versionCode
+        versionName twaManifest.versionName
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -153,6 +173,9 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     compileOptions {

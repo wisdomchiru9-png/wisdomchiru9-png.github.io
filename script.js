@@ -27,7 +27,7 @@ import {
 let entries = [];
 let filteredEntries = [];
 let songMap = {};
-let lyricsDB = null;
+
 let currentNum = null;
 let favoritesOnly = false;
 let searchTerm = '';
@@ -655,14 +655,6 @@ async function loadAssets() {
     songMap = {};
   }
 
-  try {
-    const lyricsRes = await fetch('lyrics-data/lyrics.json');
-    if (lyricsRes.ok) {
-      lyricsDB = await lyricsRes.json();
-    }
-  } catch (err) {
-    lyricsDB = null;
-  }
 
   applyFilters();
   renderRecent();
@@ -981,22 +973,6 @@ async function showSong(num) {
     text = '';
   }
 
-  if (!text && lyricsDB && lyricsDB[num]) {
-    const data = lyricsDB[num];
-    songTitleEl.textContent = data.title || entry.title;
-    songRefEl.textContent = data.ref || entry.ref || '';
-    const meta = [];
-    if (data.scripture) meta.push(data.scripture);
-    if (data.key) meta.push(data.key);
-    songMetaEl.innerHTML = meta.map((line) => `<span>${escapeHtml(line)}</span>`).join('');
-    songBodyEl.textContent = data.content || 'Lyrics not available.';
-    if (readerSettings.showAudio) {
-      loadAudio(num, entry);
-    }
-    addRecent(num);
-    highlightActive();
-    return;
-  }
 
   if (!text) {
     songBodyEl.textContent = 'Lyrics not found for this song yet.';

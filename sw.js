@@ -1,10 +1,10 @@
-const CACHE_NAME = 'bek-na-lah-v15';
+const CACHE_NAME = 'bek-na-lah-v16';
 const APP_SHELL = [
   './',
   'index.html',
   'download.html',
   'style.css',
-  'script.js?v=14',
+  'script.js?v=15',
   'firebase-config.js',
   'manifest.json',
   'icons/logo-mark.png',
@@ -16,7 +16,6 @@ const APP_SHELL = [
   'admin/index.html',
   'admin/admin.css',
   'admin/admin.js',
-  'lyrics-data/lyrics.json',
   'lyrics-data/songs-map.json',
   'all-lyrics/index.txt'
 ];
