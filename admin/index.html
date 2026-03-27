@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bek Na Lah Admin Dashboard</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
@@ -11,29 +12,52 @@
     <header class="admin-header">
       <div>
         <h1>Bek Na Lah Admin</h1>
-        <p>Status page for the local-only songbook.</p>
+        <p>Protected status page for the local-only songbook.</p>
       </div>
-      <a class="ghost" href="../index.html">Open Songbook</a>
+      <div class="admin-actions">
+        <a class="ghost" href="../index.html">Open Songbook</a>
+        <button id="admin-logout" class="ghost hidden" type="button">Lock</button>
+      </div>
     </header>
 
-    <section class="card">
-      <h2>Local-only mode</h2>
+    <section class="card" id="admin-lockscreen">
+      <h2>Admin password required</h2>
       <p>
-        The songbook now keeps favorites, notes, and reactions on each device.
-        To avoid exposing older cloud data on a public page, the admin dashboard no longer loads legacy comments or reactions here.
+        Enter the admin password to open this page. This is a light protection layer for a static GitHub Pages site,
+        so it helps reduce casual access but should not be treated as full private backend security.
       </p>
-      <div id="admin-status" class="muted">Legacy cloud loading is disabled on this page.</div>
+      <form id="admin-login-form" class="admin-form">
+        <label class="admin-field" for="admin-password">
+          <span>Password</span>
+          <input id="admin-password" type="password" autocomplete="current-password" placeholder="Enter admin password" required>
+        </label>
+        <div class="admin-form-actions">
+          <button id="admin-unlock" class="primary" type="submit">Unlock Dashboard</button>
+        </div>
+      </form>
+      <div id="admin-login-status" class="muted" aria-live="polite">Dashboard is locked.</div>
     </section>
 
-    <section class="card" id="admin-dashboard">
-      <h3>Next safe step</h3>
-      <p>
-        If you want owner-only admin tools again later, reconnect them behind a protected backend
-        or another secure private workflow before loading any cloud data.
-      </p>
-    </section>
+    <div id="admin-protected" class="hidden" aria-hidden="true">
+      <section class="card">
+        <h2>Local-only mode</h2>
+        <p>
+          The songbook now keeps favorites, notes, and reactions on each device.
+          To avoid exposing older cloud data on a public page, the admin dashboard no longer loads legacy comments or reactions here.
+        </p>
+        <div id="admin-status" class="muted">Legacy cloud loading is disabled on this page.</div>
+      </section>
+
+      <section class="card" id="admin-dashboard">
+        <h3>Next safe step</h3>
+        <p>
+          If you want owner-only admin tools again later, reconnect them behind a protected backend
+          or another secure private workflow before loading any cloud data.
+        </p>
+      </section>
+    </div>
   </div>
 
-  <script type="module" src="admin.js?v=7"></script>
+  <script type="module" src="admin.js?v=8"></script>
 </body>
 </html>
