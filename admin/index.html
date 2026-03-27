@@ -11,8 +11,9 @@
   <div class="admin-shell">
     <header class="admin-header">
       <div>
+        <div class="admin-kicker">Source Control Dashboard</div>
         <h1>Bek Na Lah Admin</h1>
-        <p>Protected status page for the local-only songbook.</p>
+        <p>Protected dashboard for managing the songbook source files.</p>
       </div>
       <div class="admin-actions">
         <a class="ghost" href="../index.html">Open Songbook</a>
@@ -21,43 +22,241 @@
     </header>
 
     <section class="card" id="admin-lockscreen">
-      <h2>Admin password required</h2>
-      <p>
-        Enter the admin password to open this page. This is a light protection layer for a static GitHub Pages site,
-        so it helps reduce casual access but should not be treated as full private backend security.
-      </p>
-      <form id="admin-login-form" class="admin-form">
-        <label class="admin-field" for="admin-password">
-          <span>Password</span>
-          <input id="admin-password" type="password" autocomplete="current-password" placeholder="Enter admin password" required>
-        </label>
-        <div class="admin-form-actions">
-          <button id="admin-unlock" class="primary" type="submit">Unlock Dashboard</button>
+      <div class="lockscreen-grid">
+        <div class="lockscreen-copy">
+          <div class="section-kicker">Protected Workspace</div>
+          <h2>Admin password required</h2>
+          <p>
+            Enter the admin password to open this page. This is a light protection layer for a static GitHub Pages site,
+            so it helps reduce casual access but should not be treated as full private backend security.
+          </p>
+          <div class="lockscreen-highlights">
+            <article class="highlight-card">
+              <div class="highlight-title">Song editor</div>
+              <p class="muted">Open any hymn, change its title, reference, metadata, and full lyrics body.</p>
+            </article>
+            <article class="highlight-card">
+              <div class="highlight-title">Browser drafts</div>
+              <p class="muted">Save unfinished work safely in this browser before touching the source files.</p>
+            </article>
+            <article class="highlight-card">
+              <div class="highlight-title">Project sync</div>
+              <p class="muted">Connect the repo folder in Chromium and write the generated files back directly.</p>
+            </article>
+          </div>
         </div>
-      </form>
-      <div id="admin-login-status" class="muted" aria-live="polite">Dashboard is locked.</div>
+        <div class="lockscreen-panel">
+          <form id="admin-login-form" class="admin-form">
+            <label class="admin-field" for="admin-password">
+              <span>Password</span>
+              <input id="admin-password" type="password" autocomplete="current-password" placeholder="Enter admin password" required>
+            </label>
+            <div class="admin-form-actions">
+              <button id="admin-unlock" class="primary" type="submit">Unlock Dashboard</button>
+            </div>
+          </form>
+          <div class="lockscreen-note">
+            <div class="note-title">Before you publish</div>
+            <p class="muted">
+              Browser edits do not automatically update GitHub Pages. After writing to the project files,
+              commit and push the repo changes to make them live.
+            </p>
+          </div>
+          <div id="admin-login-status" class="muted" aria-live="polite">Dashboard is locked.</div>
+        </div>
+      </div>
     </section>
 
     <div id="admin-protected" class="hidden" aria-hidden="true">
-      <section class="card">
-        <h2>Local-only mode</h2>
-        <p>
-          The songbook now keeps favorites, notes, and reactions on each device.
-          To avoid exposing older cloud data on a public page, the admin dashboard no longer loads legacy comments or reactions here.
-        </p>
-        <div id="admin-status" class="muted">Legacy cloud loading is disabled on this page.</div>
+      <section class="stats-grid" aria-label="Dashboard statistics">
+        <article class="card stat-card">
+          <div class="stat-label">Catalog Songs</div>
+          <div id="stat-total-songs" class="stat-value">0</div>
+          <div class="muted">Songs currently tracked by the dashboard.</div>
+        </article>
+        <article class="card stat-card">
+          <div class="stat-label">Dashboard Drafts</div>
+          <div id="stat-draft-count" class="stat-value">0</div>
+          <div class="muted">Local admin edits saved in this browser.</div>
+        </article>
+        <article class="card stat-card">
+          <div class="stat-label">Next Song No.</div>
+          <div id="stat-next-number" class="stat-value">1</div>
+          <div class="muted">Suggested number for a brand new song.</div>
+        </article>
+        <article class="card stat-card">
+          <div class="stat-label">Selected Song</div>
+          <div id="stat-active-song" class="stat-value stat-small">None</div>
+          <div class="muted">The song currently open in the editor.</div>
+        </article>
       </section>
 
+      <section class="card command-center">
+        <div class="card-header">
+          <div>
+            <div class="section-kicker">Command Center</div>
+            <h2>Editing Overview</h2>
+            <p class="muted">A quick read on your source mode, active file, and draft readiness before you write anything.</p>
+          </div>
+        </div>
+        <div class="command-grid">
+          <article class="command-card">
+            <div class="command-label">Source Mode</div>
+            <div id="overview-source-mode" class="command-value">Website files</div>
+            <p class="muted">Connect the project folder when you want to write changes directly into the repo.</p>
+          </article>
+          <article class="command-card">
+            <div class="command-label">Current File</div>
+            <div id="overview-current-file" class="command-value command-small">No file selected</div>
+            <p class="muted">This is the exact song text file name the editor is preparing.</p>
+          </article>
+          <article class="command-card">
+            <div class="command-label">Draft Readiness</div>
+            <div id="overview-draft-health" class="command-value command-small">No drafts saved</div>
+            <p class="muted">Save drafts first so you can reload, back up, and write changes more safely.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card workspace-card">
+        <div class="card-header">
+          <div>
+            <h2>Workspace</h2>
+            <p class="muted">
+              Edit songs here, save drafts in the dashboard, then write the generated source files back to your local project folder.
+            </p>
+          </div>
+          <div class="toolbar">
+            <button id="connect-project" class="ghost" type="button">Connect Project Folder</button>
+            <button id="reload-source" class="ghost" type="button">Reload Source</button>
+            <button id="write-all-project" class="primary" type="button">Write Drafts To Project</button>
+          </div>
+        </div>
+        <div class="toolbar toolbar-secondary">
+          <button id="export-backup" class="ghost" type="button">Export Backup</button>
+          <button id="import-backup-trigger" class="ghost" type="button">Import Backup</button>
+          <button id="download-index" class="ghost" type="button">Download Index</button>
+          <button id="download-map" class="ghost" type="button">Download Map</button>
+          <button id="clear-all-drafts" class="danger" type="button">Clear All Drafts</button>
+          <input id="import-backup-input" type="file" accept="application/json" hidden>
+        </div>
+        <div class="status-grid">
+          <div class="status-block">
+            <div class="status-title">Project Sync</div>
+            <div id="admin-project-status" class="muted">Project folder not connected yet.</div>
+          </div>
+          <div class="status-block">
+            <div class="status-title">Dashboard Status</div>
+            <div id="admin-status" class="muted">Loading dashboard...</div>
+          </div>
+        </div>
+        <p class="muted publish-note">
+          This dashboard can update your local repo files directly in Chromium browsers after you connect the project folder.
+          To update the live website, commit and push those file changes afterward.
+        </p>
+      </section>
+
+      <div class="admin-grid">
+        <aside class="card library-panel">
+          <div class="card-header">
+            <div>
+              <h2>Song Library</h2>
+              <p class="muted">Search, open, and create songs from one place.</p>
+            </div>
+            <button id="new-song" class="primary" type="button">New Song</button>
+          </div>
+          <div class="library-tools">
+            <input id="song-search" type="search" placeholder="Search title, number, reference">
+            <div id="song-list-meta" class="muted">Loading songs...</div>
+          </div>
+          <div id="song-list" class="song-list" role="listbox" aria-label="Song list"></div>
+        </aside>
+
+        <main class="editor-stack">
+          <section class="card editor-card">
+            <div class="card-header">
+              <div>
+                <h2>Song Editor</h2>
+                <p class="muted">Change the title, reference, metadata, file name, and lyrics body from here.</p>
+              </div>
+              <div id="editor-badge" class="pill">No song selected</div>
+            </div>
+            <form id="song-editor-form" class="editor-form">
+              <div class="form-grid">
+                <label class="field compact">
+                  <span>Number</span>
+                  <input id="song-num-input" type="number" min="1" step="1" required>
+                </label>
+                <label class="field">
+                  <span>Title</span>
+                  <input id="song-title-input" type="text" placeholder="Song title" required>
+                </label>
+                <label class="field">
+                  <span>Reference</span>
+                  <input id="song-ref-input" type="text" placeholder="Example: C.S.L. 13">
+                </label>
+              </div>
+              <div class="form-grid file-grid">
+                <label class="field">
+                  <span>Song file name</span>
+                  <input id="song-file-name-input" type="text" placeholder="1. Song Title.txt" required>
+                </label>
+                <button id="regen-file-name" class="ghost align-end" type="button">Auto File Name</button>
+              </div>
+              <label class="field">
+                <span>Meta lines</span>
+                <textarea id="song-meta-input" rows="4" placeholder="One line per entry, for example key or special notes."></textarea>
+              </label>
+              <label class="field">
+                <span>Lyrics body</span>
+                <textarea id="song-body-input" rows="18" placeholder="Write the full lyrics body here." required></textarea>
+              </label>
+              <div class="toolbar editor-actions">
+                <button id="save-draft" class="primary" type="submit">Save Draft</button>
+                <button id="reset-draft" class="ghost" type="button">Reset Draft</button>
+                <button id="write-current-project" class="ghost" type="button">Write Current To Project</button>
+                <button id="download-current-song" class="ghost" type="button">Download Song File</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="card preview-card">
+            <div class="card-header">
+              <div>
+                <h2>Preview</h2>
+                <p class="muted">Review the generated index line and text file before you write it.</p>
+              </div>
+              <div id="preview-file-name" class="pill subtle">No file</div>
+            </div>
+            <div class="preview-meta">
+              <div class="preview-block">
+                <div class="preview-label">Index line</div>
+                <div id="preview-index-line" class="preview-line">-</div>
+              </div>
+              <div class="preview-block">
+                <div class="preview-label">Draft state</div>
+                <div id="preview-draft-state" class="preview-line">No draft yet.</div>
+              </div>
+            </div>
+            <pre id="preview-song-text" class="preview-pre">Select a song to start editing.</pre>
+          </section>
+        </main>
+      </div>
+
       <section class="card" id="admin-dashboard">
-        <h3>Next safe step</h3>
+        <h3>How This Dashboard Works</h3>
         <p>
-          If you want owner-only admin tools again later, reconnect them behind a protected backend
-          or another secure private workflow before loading any cloud data.
+          The dashboard edits the source files that power the songbook: the song list, the song map, and each song text file.
+          It can save drafts in this browser, export backups, and in supported browsers write the updated files directly into your local project folder.
+        </p>
+        <p class="muted">
+          Because the live site is static, browser edits do not publish automatically to GitHub Pages.
+          After writing changes into the local project, commit and push to make them live.
         </p>
       </section>
     </div>
   </div>
 
-  <script type="module" src="admin.js?v=8"></script>
+  <script type="module" src="admin.js?v=9"></script>
 </body>
 </html>
