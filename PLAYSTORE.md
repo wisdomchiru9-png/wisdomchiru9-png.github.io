@@ -2,17 +2,35 @@
 
 This project already works as a PWA with offline support via `sw.js`.
 
+## Current app values
+1. Domain: `https://wisdomchiru9-png.github.io/`
+2. Android package: `com.wisdomchiru.beknalah`
+3. Signing alias: `beknalah`
+
 ## What you still need
-1. A live HTTPS domain that serves this folder as the site root.
-2. Your Android package name, for example `com.yourcompany.beknalah`.
-3. The SHA-256 certificate fingerprint from your signing keystore.
+1. Your live HTTPS site must keep serving this folder as the site root.
+2. Your release keystore must stay available locally.
+3. The SHA-256 certificate fingerprint in `.well-known/assetlinks.json` must match that keystore.
 
 ## Steps
 1. Host the site on your domain (HTTPS required).
-2. Update `.well-known/assetlinks.json` with your real package name and SHA-256 fingerprint.
-3. Install Bubblewrap and initialize the Android wrapper from your manifest.
-4. Build the signed APK or AAB.
-5. Upload to the Play Console.
+2. Confirm `.well-known/assetlinks.json` matches your signing key fingerprint.
+3. Set `BUBBLEWRAP_KEYSTORE_PASSWORD` and `BUBBLEWRAP_KEY_PASSWORD` in your shell.
+4. Run `build-android.cmd release` from the project root.
+5. Upload the generated `.aab` or signed `.apk` from `twa/app/build/outputs/`.
+
+## Local build commands
+```bat
+build-android.cmd debug
+build-android.cmd release
+build-android.cmd all
+```
+
+Release builds use these environment variables if present:
+```bat
+set BUBBLEWRAP_KEYSTORE_PASSWORD=your-keystore-password
+set BUBBLEWRAP_KEY_PASSWORD=your-key-password
+```
 
 ## Bubblewrap commands (example)
 ```bash
@@ -24,3 +42,4 @@ bubblewrap build
 ## Notes
 1. The site must stay online for updates. Your existing service worker will keep the app usable offline after the first successful load.
 2. If you change the domain, you must update and re-host `assetlinks.json`.
+3. `build-android.cmd` automatically uses the bundled `jdk-17`, `android-sdk`, and Gradle cache inside this repo.

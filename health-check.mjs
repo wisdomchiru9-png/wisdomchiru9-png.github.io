@@ -44,7 +44,8 @@ function runCommand(command, args, options = {}) {
   return spawnSync(command, args, {
     cwd: options.cwd || root,
     env: options.env || process.env,
-    encoding: 'utf8'
+    encoding: 'utf8',
+    maxBuffer: 10 * 1024 * 1024
   });
 }
 
@@ -104,13 +105,15 @@ function getRequiredFiles() {
     'style.css',
     'sw.js',
     'manifest.json',
-    'firebase-config.js',
+    'build-android.cmd',
+    '.well-known/assetlinks.json',
     'admin/index.html',
     'admin/admin.js',
     'all-lyrics/index.txt',
     'lyrics-data/songs-map.json',
     'twa/gradlew.bat',
-    'twa/app/src/main/AndroidManifest.xml'
+    'twa/app/src/main/AndroidManifest.xml',
+    'twa/app/src/main/res/raw/web_app_manifest.json'
   ];
 }
 
@@ -121,6 +124,42 @@ function checkRequiredFiles() {
     return;
   }
   pass('Required files', `${getRequiredFiles().length} key files are present.`);
+}
+
+function checkManifestSync() {
+  try {
+    const webManifest = JSON.parse(stripBom(readText('manifest.json')));
+    const embeddedManifest = JSON.parse(stripBom(readText('twa/app/src/main/res/raw/web_app_manifest.json')));
+    const fields = [
+      'id',
+      'name',
+      'short_name',
+      'start_url',
+      'scope',
+      'display',
+      'background_color',
+      'theme_color',
+      'description'
+    ];
+    const mismatches = fields
+      .filter((field) => (webManifest[field] || '') !== (embeddedManifest[field] || ''))
+      .map((field) => `${field}: web=${JSON.stringify(webManifest[field] || '')}, android=${JSON.stringify(embeddedManifest[field] || '')}`);
+    const webIcons = JSON.stringify(webManifest.icons || []);
+    const embeddedIcons = JSON.stringify(embeddedManifest.icons || []);
+
+    if (webIcons !== embeddedIcons) {
+      mismatches.push('icons: web and embedded manifest icon lists differ');
+    }
+
+    if (mismatches.length > 0) {
+      fail('Manifest sync', mismatches.join(' | '));
+      return;
+    }
+
+    pass('Manifest sync', 'Web manifest and embedded Android web manifest are aligned.');
+  } catch (error) {
+    fail('Manifest sync', error instanceof Error ? error.message : String(error));
+  }
 }
 
 function checkJavaScriptSyntax() {
@@ -205,10 +244,13 @@ function checkLyricsData() {
 
 function checkFirebaseConfig() {
   try {
+    if (!pathExists('firebase-config.js')) {
+      warn('Firebase config', 'Optional for the current local-only app.');
+      return;
+    }
+
     const text = readText('firebase-config.js');
     const hasPlaceholder = /PASTE_|YOUR_|example/i.test(text);
-    const googleEnabled = /google:\s*true/.test(text);
-    const facebookEnabled = /facebook:\s*true/.test(text);
     const adminEmails = [...text.matchAll(/"([^"]+@[^"]+)"/g)].map((match) => match[1]);
 
     if (hasPlaceholder) {
@@ -216,17 +258,7 @@ function checkFirebaseConfig() {
       return;
     }
 
-    if (!googleEnabled && !facebookEnabled) {
-      warn('Firebase auth providers', 'No sign-in provider is enabled in firebase-config.js.');
-    } else {
-      pass(
-        'Firebase config',
-        `Providers enabled: ${[
-          googleEnabled ? 'Google' : null,
-          facebookEnabled ? 'Facebook' : null
-        ].filter(Boolean).join(', ')}. Admin emails listed: ${adminEmails.length}.`
-      );
-    }
+    pass('Firebase config', `Optional config present. Admin emails listed: ${adminEmails.length}.`);
   } catch (error) {
     fail('Firebase config', error instanceof Error ? error.message : String(error));
   }
@@ -256,6 +288,43 @@ function findJavaHome() {
   return null;
 }
 
+function findAndroidSdk() {
+  const candidates = [process.env.ANDROID_HOME, process.env.ANDROID_SDK_ROOT, path.join(root, 'android-sdk')];
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    if (fs.existsSync(path.join(candidate, 'platforms'))) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function buildToolingEnv() {
+  const env = { ...process.env };
+  const javaHome = findJavaHome();
+  const androidSdk = findAndroidSdk();
+  const pathKey = process.platform === 'win32' ? 'Path' : 'PATH';
+
+  if (javaHome) {
+    env.JAVA_HOME = javaHome;
+    env[pathKey] = `${path.join(javaHome, 'bin')}${path.delimiter}${env[pathKey] || ''}`;
+  }
+
+  if (androidSdk) {
+    env.ANDROID_HOME = androidSdk;
+    env.ANDROID_SDK_ROOT = androidSdk;
+  }
+
+  env.GRADLE_USER_HOME = process.env.GRADLE_USER_HOME || path.join(root, 'twa', '.gradle-cache');
+
+  return { env, javaHome, androidSdk };
+}
+
+function isRepositoryAccessFailure(output) {
+  return /Permission denied: getsockopt|Could not (?:HEAD|GET) 'https?:\/\/|Could not get resource 'https?:\/\//.test(output);
+}
+
 function checkAndroidBuild() {
   if (process.argv.includes('--skip-android')) {
     warn('Android build', 'Skipped because --skip-android was provided.');
@@ -267,29 +336,46 @@ function checkAndroidBuild() {
     return;
   }
 
-  const javaHome = findJavaHome();
+  const { env, javaHome, androidSdk } = buildToolingEnv();
   if (!javaHome) {
     warn('Android build', 'JAVA_HOME or bundled JDK was not found, so the Android build check was skipped.');
     return;
   }
 
-  const env = { ...process.env, JAVA_HOME: javaHome };
-  const pathKey = process.platform === 'win32' ? 'Path' : 'PATH';
-  env[pathKey] = `${path.join(javaHome, 'bin')}${path.delimiter}${env[pathKey] || ''}`;
+  if (!androidSdk) {
+    warn('Android build', 'ANDROID_HOME/ANDROID_SDK_ROOT or bundled android-sdk was not found, so the Android build check was skipped.');
+    return;
+  }
 
   const result = process.platform === 'win32'
-    ? spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'gradlew.bat assembleDebug --console=plain'], {
+    ? spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'gradlew.bat assembleDebug --console=plain --no-daemon'], {
         cwd: path.join(root, 'twa'),
         env,
-        encoding: 'utf8'
+        encoding: 'utf8',
+        maxBuffer: 10 * 1024 * 1024
       })
-    : runCommand('./gradlew', ['assembleDebug', '--console=plain'], {
+    : runCommand('./gradlew', ['assembleDebug', '--console=plain', '--no-daemon'], {
         cwd: path.join(root, 'twa'),
         env
       });
 
+  if (result.error instanceof Error && ['EPERM', 'EACCES'].includes(result.error.code || '')) {
+    warn(
+      'Android build',
+      'Gradle could not be launched from this sandboxed environment. Run health-check.cmd or gradlew from a normal local shell to verify the APK build.'
+    );
+    return;
+  }
+
   if (result.status !== 0) {
     const output = `${result.stdout || ''}\n${result.stderr || ''}`.trim();
+    if (isRepositoryAccessFailure(output)) {
+      warn(
+        'Android build',
+        'Gradle could not reach Maven repositories from this environment. The project is configured to use the bundled JDK/SDK, but dependency downloads still need network access.'
+      );
+      return;
+    }
     const lines = output.split(/\r?\n/).filter(Boolean);
     fail('Android build', lines.slice(-12).join(' | ') || 'assembleDebug failed.');
     return;
@@ -340,6 +426,7 @@ console.log('Bek Na Lah Health Check');
 console.log('');
 
 checkRequiredFiles();
+checkManifestSync();
 checkJavaScriptSyntax();
 checkLyricsData();
 checkFirebaseConfig();
