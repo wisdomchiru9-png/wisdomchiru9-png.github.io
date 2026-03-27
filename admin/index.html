@@ -3,68 +3,117 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Bek Na Lah Admin Dashboard</title>
+  <title>Mr Wisdom Chiru Admin Dashboard</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#0a111a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Bek Na Lah Admin">
+  <meta name="apple-mobile-web-app-title" content="Mr Wisdom Chiru Admin">
   <meta name="format-detection" content="telephone=no">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=10">
 </head>
-<body>
+<body class="admin-page">
   <div class="admin-shell">
-    <header class="admin-header">
-      <div>
-        <div class="admin-kicker">Source Control Dashboard</div>
-        <h1>Bek Na Lah Admin</h1>
-        <p>Protected dashboard for managing the songbook source files.</p>
+    <header class="admin-header card hero-card">
+      <div class="hero-copy">
+        <div class="admin-kicker">Mr Wisdom Chiru // Developer Studio</div>
+        <h1>Mr Wisdom Chiru Admin Dashboard</h1>
+        <p>Private control room for editing the Bek Na Lah songbook, reviewing source state, and preparing clean publish-ready updates.</p>
+        <div class="hero-pill-row" aria-label="Admin dashboard overview">
+          <div class="hero-pill">
+            <span class="hero-pill-label">Owner</span>
+            <strong>Wisdom Chiru</strong>
+          </div>
+          <div class="hero-pill">
+            <span class="hero-pill-label">Security</span>
+            <strong>Password Gate Active</strong>
+          </div>
+          <div class="hero-pill">
+            <span class="hero-pill-label">Mode</span>
+            <strong>3D Control Surface</strong>
+          </div>
+        </div>
       </div>
-      <div class="admin-actions">
-        <a class="ghost" href="../index.html">Open Songbook</a>
-        <button id="admin-logout" class="ghost hidden" type="button">Lock</button>
+      <div class="hero-side">
+        <div class="hero-panel">
+          <div class="hero-panel-label">System Profile</div>
+          <div class="hero-panel-value">Bek Na Lah Source Command</div>
+          <p class="muted">Built for fast editing, safer draft handling, and sharper project control on desktop and phone.</p>
+        </div>
+        <div class="admin-actions">
+          <a class="ghost" href="../index.html">Open Songbook</a>
+          <button id="admin-logout" class="ghost hidden" type="button">Lock</button>
+        </div>
       </div>
     </header>
+
+    <section class="card studio-banner">
+      <div>
+        <div class="section-kicker">Studio Identity</div>
+        <h2>Developer-grade admin built for Mr Wisdom Chiru</h2>
+        <p class="muted">A stronger, more polished interface with protected access, layered glass panels, and a cleaner command flow for managing the catalog.</p>
+      </div>
+      <div class="ops-badges" aria-label="Dashboard features">
+        <div class="ops-badge">Secure Entry</div>
+        <div class="ops-badge">Draft Recovery</div>
+        <div class="ops-badge">Direct Project Write</div>
+      </div>
+    </section>
 
     <section class="card" id="admin-lockscreen">
       <div class="lockscreen-grid">
         <div class="lockscreen-copy">
-          <div class="section-kicker">Protected Workspace</div>
-          <h2>Admin password required</h2>
+          <div class="section-kicker">Secure Entry Node</div>
+          <h2>Mr Wisdom Chiru admin password required</h2>
           <p>
-            Enter the admin password to open this page. This is a light protection layer for a static GitHub Pages site,
-            so it helps reduce casual access but should not be treated as full private backend security.
+            Use the private admin password to open this workspace. The protection is client-side, so it works as a guarded studio door
+            for the published dashboard, not as a full backend vault.
           </p>
+          <div class="lockscreen-banner">
+            <div class="lockscreen-banner-label">Authorized Workspace</div>
+            <div class="lockscreen-banner-value">Only trusted editing for the owner dashboard and the song source files.</div>
+          </div>
           <div class="lockscreen-highlights">
             <article class="highlight-card">
-              <div class="highlight-title">Song editor</div>
-              <p class="muted">Open any hymn, change its title, reference, metadata, and full lyrics body.</p>
+              <div class="highlight-title">Live editor</div>
+              <p class="muted">Open any hymn, reshape its title, metadata, and full lyrics body in one cleaner surface.</p>
             </article>
             <article class="highlight-card">
-              <div class="highlight-title">Browser drafts</div>
-              <p class="muted">Save unfinished work safely in this browser before touching the source files.</p>
+              <div class="highlight-title">Draft vault</div>
+              <p class="muted">Save unfinished work safely in this browser before touching the project files.</p>
             </article>
             <article class="highlight-card">
-              <div class="highlight-title">Project sync</div>
-              <p class="muted">Connect the repo folder in Chromium and write the generated files back directly.</p>
+              <div class="highlight-title">Source sync</div>
+              <p class="muted">Connect the project folder in Chromium and write the generated files back directly.</p>
             </article>
           </div>
         </div>
         <div class="lockscreen-panel">
+          <div class="panel-kicker">Access Key</div>
           <form id="admin-login-form" class="admin-form">
             <label class="admin-field" for="admin-password">
-              <span>Password</span>
-              <input id="admin-password" type="password" autocomplete="current-password" placeholder="Enter admin password" required>
+              <span>Admin Password</span>
+              <input id="admin-password" type="password" autocomplete="current-password" placeholder="Enter Mr Wisdom Chiru admin password" required>
             </label>
             <div class="admin-form-actions">
-              <button id="admin-unlock" class="primary" type="submit">Unlock Dashboard</button>
+              <button id="admin-unlock" class="primary" type="submit">Unlock Studio</button>
             </div>
           </form>
+          <div class="security-stack" aria-label="Dashboard security summary">
+            <div class="security-chip">
+              <span class="security-label">Owner</span>
+              <strong>Mr Wisdom Chiru</strong>
+            </div>
+            <div class="security-chip">
+              <span class="security-label">Access</span>
+              <strong>Password required</strong>
+            </div>
+          </div>
           <div class="lockscreen-note">
-            <div class="note-title">Before you publish</div>
+            <div class="note-title">Publish note</div>
             <p class="muted">
-              Browser edits do not automatically update GitHub Pages. After writing to the project files,
-              commit and push the repo changes to make them live.
+              Drafts stay in this browser until you write them into the project files. After that, commit and push the repo changes to update the live site.
             </p>
           </div>
           <div id="admin-login-status" class="muted" aria-live="polite">Dashboard is locked.</div>
@@ -73,6 +122,19 @@
     </section>
 
     <div id="admin-protected" class="hidden" aria-hidden="true">
+      <section class="card ops-ribbon">
+        <div>
+          <div class="section-kicker">Control Layer</div>
+          <h2>Professional editing workspace</h2>
+          <p class="muted">Track the catalog, stage drafts, and write polished changes back to the source tree with more confidence.</p>
+        </div>
+        <div class="ops-badges" aria-label="Protected dashboard tools">
+          <div class="ops-badge">Catalog Watch</div>
+          <div class="ops-badge">Preview Engine</div>
+          <div class="ops-badge">Backup Export</div>
+        </div>
+      </section>
+
       <section class="stats-grid" aria-label="Dashboard statistics">
         <article class="card stat-card">
           <div class="stat-label">Catalog Songs</div>
@@ -100,7 +162,7 @@
         <div class="card-header">
           <div>
             <div class="section-kicker">Command Center</div>
-            <h2>Editing Overview</h2>
+            <h2>Mission Snapshot</h2>
             <p class="muted">A quick read on your source mode, active file, and draft readiness before you write anything.</p>
           </div>
         </div>
@@ -126,7 +188,7 @@
       <section class="card workspace-card">
         <div class="card-header">
           <div>
-            <h2>Workspace</h2>
+            <h2>Write Pipeline</h2>
             <p class="muted">
               Edit songs here, save drafts in the dashboard, then write the generated source files back to your local project folder.
             </p>
@@ -165,7 +227,7 @@
         <aside class="card library-panel">
           <div class="card-header">
             <div>
-              <h2>Song Library</h2>
+              <h2>Catalog Navigator</h2>
               <p class="muted">Search, open, and create songs from one place.</p>
             </div>
             <button id="new-song" class="primary" type="button">New Song</button>
@@ -181,7 +243,7 @@
           <section class="card editor-card">
             <div class="card-header">
               <div>
-                <h2>Song Editor</h2>
+                <h2>Studio Editor</h2>
                 <p class="muted">Change the title, reference, metadata, file name, and lyrics body from here.</p>
               </div>
               <div id="editor-badge" class="pill">No song selected</div>
@@ -228,7 +290,7 @@
           <section class="card preview-card">
             <div class="card-header">
               <div>
-                <h2>Preview</h2>
+                <h2>Build Preview</h2>
                 <p class="muted">Review the generated index line and text file before you write it.</p>
               </div>
               <div id="preview-file-name" class="pill subtle">No file</div>
@@ -249,19 +311,19 @@
       </div>
 
       <section class="card" id="admin-dashboard">
-        <h3>How This Dashboard Works</h3>
+        <h3>Studio Notes</h3>
         <p>
           The dashboard edits the source files that power the songbook: the song list, the song map, and each song text file.
           It can save drafts in this browser, export backups, and in supported browsers write the updated files directly into your local project folder.
         </p>
         <p class="muted">
-          Because the live site is static, browser edits do not publish automatically to GitHub Pages.
+          Because the live site is static, browser edits do not publish automatically.
           After writing changes into the local project, commit and push to make them live.
         </p>
       </section>
     </div>
   </div>
 
-  <script type="module" src="admin.js?v=9"></script>
+  <script type="module" src="admin.js?v=10"></script>
 </body>
 </html>
