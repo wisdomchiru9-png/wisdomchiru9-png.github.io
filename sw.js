@@ -1,8 +1,9 @@
-const CACHE_NAME = 'bek-na-lah-v18';
+const CACHE_NAME = 'bek-na-lah-v19';
 const APP_SHELL = [
   './',
   'index.html',
   'download.html',
+  'install-apk.html',
   'style.css',
   'script.js?v=16',
   'manifest.json',
@@ -10,7 +11,6 @@ const APP_SHELL = [
   'icons/icon-192.png',
   'icons/icon-512.png',
   'images/qr-download.png',
-  'images/qr-apk.png',
   'images/install-guide.svg',
   'admin/index.html',
   'admin/admin.css',

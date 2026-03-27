@@ -1153,6 +1153,40 @@ body.full-view .floating-exit {
   gap: 18px;
 }
 
+.download-hero-card {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(192, 100, 59, 0.16), transparent 42%),
+    radial-gradient(circle at bottom left, rgba(31, 111, 102, 0.14), transparent 38%),
+    var(--paper);
+}
+
+.download-install-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 20px;
+  align-items: center;
+}
+
+.download-install-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.download-kicker {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(192, 100, 59, 0.1);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .download-card {
   background: var(--paper);
   border: 1px solid var(--paper-strong);
@@ -1178,6 +1212,17 @@ body.full-view .floating-exit {
 .download-card p {
   margin: 0;
   color: var(--muted);
+}
+
+.download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.secondary-link {
+  min-height: 46px;
 }
 
 .download-steps {
@@ -1212,6 +1257,28 @@ body.full-view .floating-exit {
   gap: 8px;
 }
 
+.download-qr-panel {
+  justify-self: end;
+  width: min(100%, 340px);
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  text-align: center;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16px 28px rgba(19, 14, 9, 0.12);
+}
+
+.download-qr-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
 .download-qr,
 .download-guide {
   width: min(320px, 100%);
@@ -1229,6 +1296,10 @@ body.full-view .floating-exit {
   border: none;
 }
 
+.apk-redirect-card {
+  max-width: 720px;
+}
+
 .download-footer {
   color: var(--muted);
   font-size: 0.9rem;
@@ -1239,7 +1310,24 @@ body.full-view .floating-exit {
     padding: 20px 16px 28px;
   }
 
+  .download-install-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .download-qr-panel {
+    justify-self: stretch;
+    width: auto;
+  }
+
   .download-button {
     width: 100%;
+  }
+
+  .download-actions {
+    width: 100%;
+  }
+
+  .download-actions > * {
+    flex: 1 1 100%;
   }
 }
