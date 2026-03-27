@@ -2,15 +2,52 @@ const STORAGE_KEYS = {
   session: 'bekNaLahAdminUnlocked',
   failCount: 'bekNaLahAdminFailCount',
   lockUntil: 'bekNaLahAdminLockUntil',
-  drafts: 'bekNaLahAdminDraftsV1'
+  drafts: 'bekNaLahAdminDraftsV1',
+  glowTheme: 'bekNaLahAdminGlowThemeV1'
 };
 
 const PASSWORD_SALT = 'bek-na-lah-admin-v1';
 const PASSWORD_HASH = '8405d136ee16702cb24ad2d195928e7f93623533afd0bc18f85b99c60c337ee0';
 const SITE_ROOT = '../';
+const LOCKSCREEN_GLOW_PRESETS = [
+  {
+    label: 'Solar Fire',
+    colors: ['#ff7a18', '#ffd000', '#72dbff'],
+    accent: '#ff9b3d',
+    halo: 'rgba(255, 122, 24, 0.44)'
+  },
+  {
+    label: 'Neon Pulse',
+    colors: ['#ff4fd8', '#72dbff', '#92ff70'],
+    accent: '#72dbff',
+    halo: 'rgba(114, 219, 255, 0.48)'
+  },
+  {
+    label: 'Voltage Blue',
+    colors: ['#7a5cff', '#00f0ff', '#7afcff'],
+    accent: '#00e3ff',
+    halo: 'rgba(0, 240, 255, 0.46)'
+  },
+  {
+    label: 'Cyber Lime',
+    colors: ['#b7ff3f', '#72ffb8', '#72dbff'],
+    accent: '#72e3ae',
+    halo: 'rgba(114, 227, 174, 0.46)'
+  },
+  {
+    label: 'Ruby Flame',
+    colors: ['#ff5e7a', '#ff8b4d', '#ffd166'],
+    accent: '#ff7b68',
+    halo: 'rgba(255, 94, 122, 0.48)'
+  }
+];
 
 const dom = {
   lockscreen: document.getElementById('admin-lockscreen'),
+  lockscreenTitle: document.getElementById('admin-lockscreen-title'),
+  glowPrevButton: document.getElementById('admin-glow-prev'),
+  glowNextButton: document.getElementById('admin-glow-next'),
+  glowModeLabel: document.getElementById('admin-glow-mode-label'),
   protectedArea: document.getElementById('admin-protected'),
   loginForm: document.getElementById('admin-login-form'),
   passwordInput: document.getElementById('admin-password'),
@@ -74,8 +111,50 @@ const state = {
   searchTerm: '',
   projectHandle: null,
   sourceMode: 'site',
-  cooldownTimer: null
+  cooldownTimer: null,
+  glowThemeIndex: 0
 };
+
+function normalizeGlowIndex(value) {
+  if (!Number.isInteger(value)) {
+    return 0;
+  }
+
+  const size = LOCKSCREEN_GLOW_PRESETS.length;
+  return ((value % size) + size) % size;
+}
+
+function readSavedGlowThemeIndex() {
+  const value = Number(localStorage.getItem(STORAGE_KEYS.glowTheme));
+  return normalizeGlowIndex(Number.isFinite(value) ? value : 0);
+}
+
+function applyGlowTheme(index) {
+  const normalizedIndex = normalizeGlowIndex(index);
+  const preset = LOCKSCREEN_GLOW_PRESETS[normalizedIndex];
+
+  state.glowThemeIndex = normalizedIndex;
+  localStorage.setItem(STORAGE_KEYS.glowTheme, String(normalizedIndex));
+
+  document.documentElement.style.setProperty('--lock-glow-a', preset.colors[0]);
+  document.documentElement.style.setProperty('--lock-glow-b', preset.colors[1]);
+  document.documentElement.style.setProperty('--lock-glow-c', preset.colors[2]);
+  document.documentElement.style.setProperty('--lock-glow-accent', preset.accent);
+  document.documentElement.style.setProperty('--lock-glow-halo', preset.halo);
+
+  if (dom.lockscreenTitle) {
+    dom.lockscreenTitle.dataset.glowTheme = preset.label;
+    dom.lockscreenTitle.setAttribute('title', `${preset.label} glow mode`);
+  }
+
+  if (dom.glowModeLabel) {
+    dom.glowModeLabel.textContent = preset.label;
+  }
+}
+
+function shiftGlowTheme(delta) {
+  applyGlowTheme(state.glowThemeIndex + delta);
+}
 
 function stripBom(text) {
   return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
@@ -1927,6 +2006,20 @@ async function ensureDashboardInitialized() {
     state.initPromise = null;
   }
 }
+
+if (dom.glowPrevButton) {
+  dom.glowPrevButton.addEventListener('click', () => {
+    shiftGlowTheme(-1);
+  });
+}
+
+if (dom.glowNextButton) {
+  dom.glowNextButton.addEventListener('click', () => {
+    shiftGlowTheme(1);
+  });
+}
+
+applyGlowTheme(readSavedGlowThemeIndex());
 
 if (dom.loginForm) {
   dom.loginForm.addEventListener('submit', handleUnlock);

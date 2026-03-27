@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-title" content="Mr Wisdom Chiru Admin">
   <meta name="format-detection" content="telephone=no">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-  <link rel="stylesheet" href="admin.css?v=10">
+  <link rel="stylesheet" href="admin.css?v=11">
 </head>
 <body class="admin-page">
   <div class="admin-shell">
@@ -65,7 +65,17 @@
       <div class="lockscreen-grid">
         <div class="lockscreen-copy">
           <div class="section-kicker">Secure Entry Node</div>
-          <h2>Mr Wisdom Chiru admin password required</h2>
+          <div class="lockscreen-title-row">
+            <div class="lockscreen-title-stack">
+              <h2 id="admin-lockscreen-title" class="rgb-title">Mr Wisdom Chiru admin password required</h2>
+              <div class="glow-hint">Use `-` and `+` to switch the RGB glow style.</div>
+            </div>
+            <div class="glow-controls" role="group" aria-label="RGB glow controls">
+              <button id="admin-glow-prev" class="ghost glow-adjust" type="button" aria-label="Previous glow color">-</button>
+              <div id="admin-glow-mode-label" class="glow-mode-label" aria-live="polite">Solar Fire</div>
+              <button id="admin-glow-next" class="ghost glow-adjust" type="button" aria-label="Next glow color">+</button>
+            </div>
+          </div>
           <p>
             Use the private admin password to open this workspace. The protection is client-side, so it works as a guarded studio door
             for the published dashboard, not as a full backend vault.
@@ -324,6 +334,6 @@
     </div>
   </div>
 
-  <script type="module" src="admin.js?v=10"></script>
+  <script type="module" src="admin.js?v=11"></script>
 </body>
 </html>

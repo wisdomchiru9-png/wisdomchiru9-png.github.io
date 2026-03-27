@@ -16,6 +16,11 @@
   --admin-cyan: #72dbff;
   --admin-green: #72e3ae;
   --admin-danger: #ff8c8c;
+  --lock-glow-a: #ff7a18;
+  --lock-glow-b: #ffd000;
+  --lock-glow-c: #72dbff;
+  --lock-glow-accent: #ff9b3d;
+  --lock-glow-halo: rgba(255, 122, 24, 0.44);
 }
 
 * {
@@ -353,11 +358,77 @@ a {
   align-items: stretch;
 }
 
-.lockscreen-copy h2 {
-  max-width: 12ch;
+.lockscreen-title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
   margin-bottom: 12px;
+}
+
+.lockscreen-title-stack {
+  min-width: 0;
+}
+
+.rgb-title {
+  max-width: 12ch;
+  margin-bottom: 10px;
   font-size: clamp(2rem, 4vw, 3.5rem);
   line-height: 1.02;
+  color: transparent;
+  background-image: linear-gradient(120deg, var(--lock-glow-a), var(--lock-glow-b), var(--lock-glow-c), var(--lock-glow-a));
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter:
+    drop-shadow(0 0 10px var(--lock-glow-halo))
+    drop-shadow(0 0 24px color-mix(in srgb, var(--lock-glow-halo) 72%, transparent));
+  animation: rgb-scan 7s linear infinite, glow-pulse 2.6s ease-in-out infinite alternate;
+}
+
+.glow-hint {
+  color: var(--admin-muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.glow-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 16px 28px rgba(0, 0, 0, 0.2);
+}
+
+.glow-adjust {
+  min-width: 48px;
+  padding-inline: 0;
+  font-size: 1.45rem;
+  line-height: 1;
+  border-color: color-mix(in srgb, var(--lock-glow-accent) 36%, rgba(255, 255, 255, 0.12));
+}
+
+.glow-mode-label {
+  min-width: 148px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--lock-glow-accent) 28%, rgba(255, 255, 255, 0.08));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--lock-glow-accent) 20%, rgba(255, 255, 255, 0.06)), rgba(255, 255, 255, 0.02));
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 24px color-mix(in srgb, var(--lock-glow-halo) 65%, transparent);
 }
 
 .lockscreen-copy > p {
@@ -938,6 +1009,30 @@ a {
   }
 }
 
+@keyframes rgb-scan {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes glow-pulse {
+  from {
+    filter:
+      drop-shadow(0 0 8px var(--lock-glow-halo))
+      drop-shadow(0 0 20px color-mix(in srgb, var(--lock-glow-halo) 62%, transparent));
+  }
+
+  to {
+    filter:
+      drop-shadow(0 0 12px var(--lock-glow-halo))
+      drop-shadow(0 0 30px color-mix(in srgb, var(--lock-glow-halo) 78%, transparent));
+  }
+}
+
 @media (max-width: 1240px) {
   .admin-header,
   .lockscreen-grid,
@@ -1000,11 +1095,15 @@ a {
   .command-grid {
     grid-template-columns: 1fr;
   }
+
+  .lockscreen-title-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
   .admin-header h1,
-  .lockscreen-copy h2 {
+  .rgb-title {
     max-width: none;
   }
 
@@ -1035,5 +1134,15 @@ a {
   .admin-form-actions > *,
   .ops-badges > * {
     width: 100%;
+  }
+
+  .glow-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .glow-mode-label {
+    min-width: 0;
+    flex: 1 1 auto;
   }
 }
