@@ -1,8 +1,9 @@
-﻿{
+{
+  "id": "/",
   "name": "Bek Na Lah Songbook",
   "short_name": "Bek Na Lah",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f0e6da",
   "theme_color": "#c0643b",

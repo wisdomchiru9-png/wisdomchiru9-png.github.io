@@ -1,11 +1,10 @@
-const CACHE_NAME = 'bek-na-lah-v16';
+const CACHE_NAME = 'bek-na-lah-v18';
 const APP_SHELL = [
   './',
   'index.html',
   'download.html',
   'style.css',
-  'script.js?v=15',
-  'firebase-config.js',
+  'script.js?v=16',
   'manifest.json',
   'icons/logo-mark.png',
   'icons/icon-192.png',

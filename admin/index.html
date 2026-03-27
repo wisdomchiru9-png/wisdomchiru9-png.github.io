@@ -11,60 +11,29 @@
     <header class="admin-header">
       <div>
         <h1>Bek Na Lah Admin</h1>
-        <p>Owner dashboard for sign-ins, comments, and reactions.</p>
+        <p>Status page for the local-only songbook.</p>
       </div>
-      <button id="admin-signout" type="button" class="ghost hidden">Sign out</button>
+      <a class="ghost" href="../index.html">Open Songbook</a>
     </header>
 
-    <section id="admin-login" class="card">
-      <h2>Sign in to continue</h2>
-      <p>Use the same Google or Facebook account you use for the app.</p>
-      <div class="login-buttons">
-        <button id="admin-google" type="button">Continue with Google</button>
-        <button id="admin-facebook" type="button" class="ghost">Continue with Facebook</button>
-      </div>
-      <div id="admin-login-status" class="muted">Waiting for sign-in.</div>
+    <section class="card">
+      <h2>Local-only mode</h2>
+      <p>
+        The songbook now keeps favorites, notes, and reactions on each device.
+        To avoid exposing older cloud data on a public page, the admin dashboard no longer loads legacy comments or reactions here.
+      </p>
+      <div id="admin-status" class="muted">Legacy cloud loading is disabled on this page.</div>
     </section>
 
-    <section id="admin-dashboard" class="hidden">
-      <div class="stats-grid">
-        <div class="card">
-          <h3>Today sign-ins</h3>
-          <div id="today-signins" class="stat">0</div>
-          <div class="muted" id="today-date"></div>
-        </div>
-        <div class="card">
-          <h3>Last 7 days</h3>
-          <div id="weekly-signins" class="list"></div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <h3>Today sign-ins (list)</h3>
-            <button id="refresh-signins" class="ghost" type="button">Refresh</button>
-          </div>
-          <div id="signins-list" class="list">Loading...</div>
-        </div>
-      </div>
-
-      <div class="grid-two">
-        <div class="card">
-          <div class="card-header">
-            <h3>Recent comments</h3>
-            <button id="refresh-comments" class="ghost" type="button">Refresh</button>
-          </div>
-          <div id="comment-feed" class="list">Loading...</div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <h3>Recent reactions</h3>
-            <button id="refresh-reactions" class="ghost" type="button">Refresh</button>
-          </div>
-          <div id="reaction-feed" class="list">Loading...</div>
-        </div>
-      </div>
+    <section class="card" id="admin-dashboard">
+      <h3>Next safe step</h3>
+      <p>
+        If you want owner-only admin tools again later, reconnect them behind a protected backend
+        or another secure private workflow before loading any cloud data.
+      </p>
     </section>
   </div>
 
-  <script type="module" src="admin.js?v=5"></script>
+  <script type="module" src="admin.js?v=7"></script>
 </body>
 </html>

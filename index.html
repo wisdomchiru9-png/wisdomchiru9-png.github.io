@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="auth-locked">
+<body>
   <div class="app">
     <header class="topbar">
       <div class="brand">
@@ -32,16 +32,9 @@
           <button id="random-btn" type="button">Random</button>
           <button id="next-btn" type="button">Next</button>
         </div>
+        <button id="tutorial-btn" class="ghost" type="button">Tutorial</button>
         <button id="settings-btn" class="ghost" type="button">Settings</button>
         <a class="ghost download-link" href="download.html">Download App</a>
-        <div id="user-chip" class="user-chip hidden">
-          <img id="user-avatar" alt="User avatar">
-          <div class="user-info">
-            <div id="user-name">Signed in</div>
-            <div id="user-email"></div>
-          </div>
-          <button id="signout-btn" class="ghost" type="button">Sign out</button>
-        </div>
       </div>
     </header>
 
@@ -106,8 +99,8 @@
           </div>
           <div class="comment-panel" id="comment-panel">
           <div class="comment-header">
-            <div class="comment-title">Comments / Corrections</div>
-            <div class="comment-meta" id="comment-meta">Saved locally. Use Save to share with the owner.</div>
+            <div class="comment-title">Notes / Corrections</div>
+            <div class="comment-meta" id="comment-meta">Saved locally on this device.</div>
           </div>
             <div class="comment-author">
               <label for="comment-author">Your name</label>
@@ -116,15 +109,15 @@
                 <button id="comment-author-save" type="button">Set Default</button>
               </div>
             </div>
-            <textarea id="comment-input" rows="4" placeholder="Write corrections or notes for this song..."></textarea>
+            <textarea id="comment-input" rows="4" placeholder="Write notes or corrections for this song..."></textarea>
           <div class="comment-actions">
             <button id="comment-save" type="button">Save</button>
             <button id="comment-copy" class="ghost" type="button">Copy</button>
             <button id="comment-clear" class="ghost" type="button">Clear</button>
           </div>
           <div class="comment-feed">
-            <div class="comment-feed-title">Recent comments</div>
-            <div id="comment-list" class="comment-list">Sign in to see shared comments.</div>
+            <div class="comment-feed-title">Local note info</div>
+            <div id="comment-list" class="comment-list">Notes stay on this device. Export them anytime from Settings.</div>
           </div>
         </div>
         </div>
@@ -149,23 +142,6 @@
         </div>
       </section>
     </main>
-  </div>
-  <div id="auth-gate" class="auth-gate" aria-live="polite">
-    <div class="auth-card">
-      <div class="auth-brand">
-        <img src="icons/logo-mark.png" alt="Bek Na Lah logo">
-        <div>
-          <h2>Welcome to Bek Na Lah Songbook</h2>
-          <p>Please sign in to continue.</p>
-        </div>
-      </div>
-      <div class="auth-buttons">
-        <button id="auth-google" type="button">Continue with Google</button>
-        <button id="auth-facebook" type="button" class="ghost">Continue with Facebook</button>
-      </div>
-      <div id="auth-status" class="auth-status">Choose a sign-in method.</div>
-      <div class="auth-note">We use sign-in to keep the community safe and track comments and reactions.</div>
-    </div>
   </div>
   <div id="onboarding-modal" class="modal" aria-hidden="true">
     <div class="modal-backdrop" id="onboarding-backdrop"></div>
@@ -258,8 +234,8 @@
         <div class="setting-row privacy-note">
           <div class="setting-label">Privacy</div>
           <div class="setting-text">
-            We collect sign-in, comments, and reactions to keep the community safe and improve the songbook.
-            You can contact the owner from the main screen for any concerns.
+            This version of the app does not require an account.
+            Favorites, notes, and reactions are stored locally in this browser on this device.
           </div>
         </div>
       </div>
@@ -281,6 +257,6 @@
     </div>
   </div>
   <button id="exit-fullview" class="floating-exit" type="button">Exit Full View</button>
-  <script type="module" src="script.js?v=15"></script>
+  <script type="module" src="script.js?v=16"></script>
 </body>
 </html>

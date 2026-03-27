@@ -12,8 +12,3 @@ export const adminEmails = [
   "wisdomchhiru9@gmail.com",
   "wisdomchiru9@gmail.com"
 ];
-
-export const authProviders = {
-  google: true,
-  facebook: true
-};
