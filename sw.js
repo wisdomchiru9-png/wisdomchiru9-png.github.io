@@ -1,11 +1,11 @@
-const CACHE_NAME = 'bek-na-lah-v21';
+const CACHE_NAME = 'bek-na-lah-v22';
 const APP_SHELL = [
   './',
   'index.html',
   'download.html',
   'install-apk.html',
   'style.css',
-  'script.js?v=17',
+  'script.js?v=18',
   'download.js',
   'manifest.json',
   'apple-touch-icon.png',

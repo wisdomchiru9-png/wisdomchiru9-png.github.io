@@ -159,6 +159,29 @@ function escapeHtml(value) {
   });
 }
 
+function parseSongNumber(value) {
+  const num = Number.parseInt(String(value || '').replace(/^#/, ''), 10);
+  if (!Number.isInteger(num) || num < 1) return null;
+  return num;
+}
+
+function getSongNumberFromHash() {
+  return parseSongNumber(window.location.hash);
+}
+
+function buildSongUrl(num) {
+  const url = new URL(window.location.href);
+  url.hash = String(num);
+  return url.toString();
+}
+
+function syncSongHash(num) {
+  if (!num) return;
+  const nextHash = `#${num}`;
+  if (window.location.hash === nextHash) return;
+  window.history.replaceState(null, '', nextHash);
+}
+
 function loadFavorites() {
   try {
     const raw = localStorage.getItem('lyricsFavorites');
@@ -471,7 +494,10 @@ async function loadAssets() {
 
   if (entries.length > 0) {
     let initialNum = entries[0].num;
-    if (readerSettings.rememberLast) {
+    const hashNum = getSongNumberFromHash();
+    if (hashNum && getEntry(hashNum)) {
+      initialNum = hashNum;
+    } else if (readerSettings.rememberLast) {
       const last = Number(localStorage.getItem('lyricsLastSong'));
       if (!Number.isNaN(last) && getEntry(last)) {
         initialNum = last;
@@ -571,22 +597,26 @@ function buildShareText() {
   const meta = Array.from(songMetaEl.querySelectorAll('span')).map((span) => span.textContent).join(' • ');
   const metaLine = meta ? `\n${meta}` : '';
   const body = songBodyEl.textContent ? `\n\n${songBodyEl.textContent}` : '';
-  return `${title}${ref}${metaLine}${body}`.trim();
+  const link = buildSongUrl(currentNum);
+  return `${title}${ref}${metaLine}${body}\n\nOpen this song: ${link}`.trim();
 }
 
-function buildQrText() {
-  if (!currentNum) return '';
+function buildQrPayload() {
+  if (!currentNum) return null;
   const entry = getEntry(currentNum);
   const title = entry ? `${entry.num}. ${entry.title}` : `Song ${currentNum}`;
-  return `Chiru Lyrics Book\n${title}\nUse search to open this song.`;
+  return {
+    title,
+    url: buildSongUrl(currentNum)
+  };
 }
 
 function openQr() {
-  const text = buildQrText();
-  if (!text) return;
-  const encoded = encodeURIComponent(text);
+  const payload = buildQrPayload();
+  if (!payload) return;
+  const encoded = encodeURIComponent(payload.url);
   qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}`;
-  qrCaption.textContent = text.replace(/\n/g, ' • ');
+  qrCaption.textContent = `${payload.title} • Open this exact song on another phone.`;
   qrModal.classList.add('open');
   qrModal.setAttribute('aria-hidden', 'false');
 }
@@ -763,6 +793,7 @@ async function showSong(num) {
   }
 
   currentNum = num;
+  syncSongHash(num);
   songNumberEl.textContent = `No. ${num}`;
   songTitleEl.textContent = entry.title;
   songRefEl.textContent = entry.ref || '';
@@ -856,6 +887,12 @@ function applyFilters(options = {}) {
 function searchEntries() {
   searchTerm = searchInput.value.trim().toLowerCase();
   applyFilters({ autoSelect: true });
+}
+
+function showSongFromHash() {
+  const hashNum = getSongNumberFromHash();
+  if (!hashNum || !getEntry(hashNum) || hashNum === currentNum) return;
+  showSong(hashNum);
 }
 
 function prevSong() {
@@ -1067,9 +1104,10 @@ shareBtn.addEventListener('click', async () => {
   const text = buildShareText();
   if (!text) return;
   const title = songTitleEl.textContent || 'Chiru Lyrics';
+  const url = currentNum ? buildSongUrl(currentNum) : window.location.href;
   if (navigator.share) {
     try {
-      await navigator.share({ title, text });
+      await navigator.share({ title, text, url });
       return;
     } catch (err) {
       // fallback to copy
@@ -1231,6 +1269,11 @@ window.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowRight') {
     nextSong();
   }
+});
+
+window.addEventListener('hashchange', () => {
+  if (!assetsLoaded) return;
+  showSongFromHash();
 });
 
 fontDecreaseBtn.addEventListener('click', () => {
