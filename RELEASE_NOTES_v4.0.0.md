@@ -1,4 +1,4 @@
-Wisdom Chiru – Bek Na Lah Songbook v4
+Wisdom Chiru – Beek Na Lah Chiru Hymnal Songbook v4
 
 Highlights
 - Signed APK rebuilt and attached to the release.

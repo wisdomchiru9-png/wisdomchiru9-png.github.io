@@ -24,8 +24,8 @@ def twaManifest = [
     applicationId: 'com.wisdomchiru.beknalah',
     hostName: 'wisdomchiru9-png.github.io', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Bek Na Lah Songbook', // The application name.
-    launcherName: 'Bek Na Lah Songbook', // The name shown on the Android Launcher.
+    name: 'Beek Na Lah Chiru Hymnal Songbook', // The application name.
+    launcherName: 'Beek Na Lah Chiru Hymnal Songbook', // The name shown on the Android Launcher.
     versionCode: 5,
     versionName: '4.0.1',
     themeColor: '#C0643B', // The color used for the status bar.

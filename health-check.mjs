@@ -425,7 +425,7 @@ function checkOptionalAssets() {
   }
 }
 
-console.log('Bek Na Lah Health Check');
+console.log('Beek Na Lah Health Check');
 console.log('');
 
 checkRequiredFiles();

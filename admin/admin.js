@@ -1731,7 +1731,7 @@ async function connectProjectFolder() {
     }
 
     state.projectHandle = null;
-    setProjectStatus('That folder does not look like this Bek Na Lah project root.', 'error');
+    setProjectStatus('That folder does not look like this Beek Na Lah project root.', 'error');
     renderAll();
   }
 }
