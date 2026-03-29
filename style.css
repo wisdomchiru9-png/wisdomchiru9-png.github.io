@@ -438,6 +438,23 @@ body.theme-dark {
   color: var(--muted);
 }
 
+.recent-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recent-clear {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+.recent-clear:disabled {
+  cursor: default;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
 .recent-list {
   list-style: none;
   margin: 0;
@@ -1173,6 +1190,10 @@ body.full-view .floating-exit {
 
   .recent-action {
     justify-self: start;
+  }
+
+  .recent-tools {
+    gap: 6px;
   }
 }
 

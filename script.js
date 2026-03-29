@@ -45,6 +45,7 @@ const favoritesToggle = document.getElementById('favorites-toggle');
 const exportBtn = document.getElementById('export-btn');
 const recentListEl = document.getElementById('recent-list');
 const recentCountEl = document.getElementById('recent-count');
+const recentClearBtn = document.getElementById('recent-clear');
 const coverArtEl = document.getElementById('cover-art');
 const audioPlayer = document.getElementById('audio-player');
 const audioStatus = document.getElementById('audio-status');
@@ -436,6 +437,12 @@ function addRecent(num) {
   renderRecent();
 }
 
+function clearRecent() {
+  recent = [];
+  saveRecent();
+  renderRecent();
+}
+
 async function loadAssets() {
   loadReaderSettings();
   await checkAudioAvailability();
@@ -507,6 +514,9 @@ function renderIndex(list) {
 
 function renderRecent() {
   recentListEl.innerHTML = '';
+  if (recentClearBtn) {
+    recentClearBtn.disabled = recent.length === 0;
+  }
   if (recent.length === 0) {
     const item = document.createElement('li');
     item.className = 'recent-item';
@@ -1036,6 +1046,13 @@ favoriteBtn.addEventListener('click', () => {
 });
 
 exportBtn.addEventListener('click', exportFavorites);
+if (recentClearBtn) {
+  recentClearBtn.addEventListener('click', () => {
+    if (recent.length === 0) return;
+    if (!confirm('Clear recently viewed songs?')) return;
+    clearRecent();
+  });
+}
 commentExportBtn.addEventListener('click', exportComments);
 commentClearAllBtn.addEventListener('click', () => {
   if (!confirm('Clear all saved comments?')) return;
