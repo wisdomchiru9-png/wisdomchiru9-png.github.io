@@ -20,10 +20,10 @@
       "**/*.dll",
       "**/*.msi",
       "**/*.txt",
-      "all-lyrics/",
       "all-lyrics/**",
-      "songs/",
-      "songs/**"
+      "songs/**",
+      "all-lyrics/",
+      "songs/"
     ],
     "rewrites": [
       {
