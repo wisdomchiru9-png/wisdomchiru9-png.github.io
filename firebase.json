@@ -9,7 +9,11 @@
       "keystore/**",
       ".vscode/**",
       "health-check.mjs",
-      "build-android.cmd"
+      "build-android.cmd",
+      "**/*.exe",
+      "**/*.cmd",
+      "**/*.bat",
+      "**/*.sh"
     ],
     "rewrites": [
       {
