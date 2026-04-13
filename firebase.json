@@ -19,7 +19,9 @@
       "**/*.jks",
       "**/*.dll",
       "**/*.msi",
-      "**/*.txt"
+      "**/*.txt",
+      "all-lyrics/**",
+      "songs/**"
     ],
     "rewrites": [
       {
