@@ -1317,8 +1317,19 @@ window.addEventListener('load', async () => {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {
+    navigator.serviceWorker.register('sw.js').then((registration) => {
+      // Check if already ready
+      if (registration.active) {
+        document.getElementById('offline-badge')?.removeAttribute('hidden');
+      }
+    }).catch(() => {
       // ignore registration errors
+    });
+
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'OFFLINE_READY') {
+        document.getElementById('offline-badge')?.removeAttribute('hidden');
+      }
     });
   });
 }

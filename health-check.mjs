@@ -398,7 +398,12 @@ function checkOptionalAssets() {
     const scriptText = readText('script.js');
     const downloadText = readText('download.html');
     const audioDisabled = /const AUDIO_FEATURE_ENABLED\s*=\s*false\s*;/.test(scriptText);
-    const usesLocalApk = /href=["']downloads\/bek-nah-lah\.apk["']/.test(downloadText);
+    const usesLocalApk = /href=["']downloads\/Beek-nah-lah\.apk["']/.test(downloadText);
+    const hasDownloadLink = /href=["']https:\/\/github\.com\/wisdomchiru9-png\/wisdomchiru9-png\.github\.io\/releases\/download\/v4\.0\.1\/Beek-nah-lah\.apk["']/.test(downloadText);
+
+    if (!usesLocalApk && !hasDownloadLink) {
+      warn('Optional assets', 'download.html does not point to the v4.0.1 Beek-nah-lah.apk or local downloads/Beek-nah-lah.apk.');
+    }
 
     if (audioDisabled) {
       notes.push('audio is intentionally disabled');
@@ -410,8 +415,8 @@ function checkOptionalAssets() {
     }
 
     if (usesLocalApk) {
-      if (!pathExists('downloads/bek-nah-lah.apk')) {
-        warn('Optional assets', 'download.html points to downloads/bek-nah-lah.apk, but that file is missing.');
+      if (!pathExists('downloads/Beek-nah-lah.apk')) {
+        warn('Optional assets', 'download.html points to downloads/Beek-nah-lah.apk, but that file is missing.');
         return;
       }
       notes.push('local APK is present');

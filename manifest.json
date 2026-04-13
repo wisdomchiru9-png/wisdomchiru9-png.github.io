@@ -1,23 +1,37 @@
 {
   "id": "/",
-  "name": "Beek Na Lah Chiru Hymnal Songbook",
+  "name": "Beek Na Lah",
   "short_name": "Beek Na Lah",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f0e6da",
   "theme_color": "#c0643b",
-  "description": "Beek Na Lah Chiru Hymnal Songbook - Chiru tribe gospel lyrics book.",
+  "description": "Beek Na Lah - Chiru Hymnal songs.",
   "icons": [
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search Songs",
+      "url": "/?search=1",
+      "description": "Quickly search for a song"
+    },
+    {
+      "name": "Favorites",
+      "url": "/?favorites=1",
+      "description": "View your favorite songs"
     }
   ]
 }

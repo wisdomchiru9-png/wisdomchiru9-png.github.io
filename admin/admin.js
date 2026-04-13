@@ -1,12 +1,12 @@
 const STORAGE_KEYS = {
-  session: 'bekNaLahAdminUnlocked',
-  failCount: 'bekNaLahAdminFailCount',
-  lockUntil: 'bekNaLahAdminLockUntil',
-  drafts: 'bekNaLahAdminDraftsV1',
-  glowTheme: 'bekNaLahAdminGlowThemeV1'
+  session: 'BeekNaLahAdminUnlocked',
+  failCount: 'BeekNaLahAdminFailCount',
+  lockUntil: 'BeekNaLahAdminLockUntil',
+  drafts: 'BeekNaLahAdminDraftsV1',
+  glowTheme: 'BeekNaLahAdminGlowThemeV1'
 };
 
-const PASSWORD_SALT = 'bek-na-lah-admin-v1';
+const PASSWORD_SALT = 'Beek-na-lah-admin-v1';
 const PASSWORD_HASH = '8405d136ee16702cb24ad2d195928e7f93623533afd0bc18f85b99c60c337ee0';
 const SITE_ROOT = '../';
 const LOCKSCREEN_GLOW_PRESETS = [
@@ -1634,7 +1634,7 @@ async function exportBackup() {
   };
 
   downloadTextFile(
-    `bek-na-lah-admin-backup-${formatDownloadStamp()}.json`,
+    `Beek-na-lah-admin-backup-${formatDownloadStamp()}.json`,
     `${JSON.stringify(backup, null, 2)}\n`,
     'application/json;charset=utf-8'
   );

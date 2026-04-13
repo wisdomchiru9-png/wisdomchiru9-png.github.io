@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bek-na-lah-v22';
+const CACHE_NAME = 'Beek-Na-Lah-v23';
 const APP_SHELL = [
   './',
   'index.html',
@@ -42,6 +42,10 @@ self.addEventListener('install', (event) => {
         const map = await mapRes.json();
         const songUrls = Object.values(map).map((name) => encodeURI(`all-lyrics/songs/${name}`));
         await cacheUrls(cache, songUrls);
+
+        // Notify that caching is complete
+        const clients = await self.clients.matchAll();
+        clients.forEach((client) => client.postMessage({ type: 'OFFLINE_READY' }));
       }
     } catch (err) {
       // If song list fetch fails, app shell still works.

@@ -1,13 +1,13 @@
 {
   "id": "/",
-  "name": "Beek Na Lah Chiru Hymnal Songbook",
+  "name": "Beek Na Lah",
   "short_name": "Beek Na Lah",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f0e6da",
-  "theme_color": "#c0643b",
-  "description": "Beek Na Lah Chiru Hymnal Songbook - Chiru tribe gospel lyrics book.",
+  "background_color": "#F0E6DA",
+  "theme_color": "#C0643B",
+  "description": "Beek Na Lah - Chiru tribe gospel lyrics book.",
   "icons": [
     {
       "src": "icons/icon-192.png",

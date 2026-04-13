@@ -3,7 +3,7 @@
 This project already works as a PWA with offline support via `sw.js`.
 
 ## Current app values
-1. Domain: `https://wisdomchiru9-png.github.io/`
+1. Domain: `https://Beek-Na-Lah.in/`
 2. Android package: `com.wisdomchiru.beknalah`
 3. Signing alias: `beknalah`
 

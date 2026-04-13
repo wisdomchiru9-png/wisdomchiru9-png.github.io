@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --ink: #1f1b16;
   --muted: #5b4c41;
   --paper: #f7f0e6;
@@ -203,12 +203,41 @@ body.theme-dark {
   line-height: 1.5;
 }
 
+.brand-sub {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: var(--emboss-light);
+}
+
+.offline-ready {
+  background: var(--accent-2);
+  color: white;
+  animation: badgeFadeIn 0.5s ease-out;
+}
+
+@keyframes badgeFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 .brand-text h1 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
-  font-family: var(--font-serif);
-  text-shadow: var(--emboss-light);
+  font-size: 1.8rem;
+  letter-spacing: 0.02em;
+  background: var(--metallic-dark);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
 }
 
 .brand-text p {

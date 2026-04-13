@@ -1,8 +1,8 @@
 {
   "packageId": "com.wisdomchiru.beknalah",
-  "host": "wisdomchiru9-png.github.io",
-  "name": "Beek Na Lah Chiru Hymnal Songbook",
-  "launcherName": "Beek Na Lah Chiru Hymnal Songbook",
+  "host": "Beek-Na-Lah.in",
+  "name": "Beek Na Lah",
+  "launcherName": "Beek Na Lah",
   "display": "standalone",
   "themeColor": "#C0643B",
   "themeColorDark": "#000000",
@@ -13,7 +13,7 @@
   "backgroundColor": "#F0E6DA",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://wisdomchiru9-png.github.io/icons/icon-512.png",
+  "iconUrl": "https://Beek-Na-Lah.in/icons/icon-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "C:\\Users\\WISDOM~1\\Bek-Nah-Lah\\keystore\\BEKNAL~1.JKS",
@@ -23,7 +23,7 @@
   "appVersionCode": 5,
   "shortcuts": [],
   "generatorApp": "unknown",
-  "webManifestUrl": "https://wisdomchiru9-png.github.io/manifest.json",
+  "webManifestUrl": "https://Beek-Na-Lah.in/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -32,7 +32,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://wisdomchiru9-png.github.io/",
+  "fullScopeUrl": "https://Beek-Na-Lah.in/",
   "minSdkVersion": 21,
   "orientation": "default",
   "fingerprints": [
