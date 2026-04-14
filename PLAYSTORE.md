@@ -4,8 +4,8 @@ This project already works as a PWA with offline support via `sw.js`.
 
 ## Current app values
 1. Domain: `https://Beek-Na-Lah.in/`
-2. Android package: `com.wisdomchiru.beknalah`
-3. Signing alias: `beknalah`
+2. Android package: `com.wisdomchiru.beeknalah`
+3. Signing alias: keep your existing keystore alias, or set it explicitly with `BEEKNALAH_KEY_ALIAS`
 
 ## What you still need
 1. Your live HTTPS site must keep serving this folder as the site root.
@@ -15,7 +15,7 @@ This project already works as a PWA with offline support via `sw.js`.
 ## Steps
 1. Host the site on your domain (HTTPS required).
 2. Confirm `.well-known/assetlinks.json` matches your signing key fingerprint.
-3. Set `BUBBLEWRAP_KEYSTORE_PASSWORD` and `BUBBLEWRAP_KEY_PASSWORD` in your shell.
+3. Set `BEEKNALAH_KEYSTORE_PASSWORD` and `BEEKNALAH_KEY_PASSWORD` in your shell, or use the Bubblewrap password variables.
 4. Run `build-android.cmd release` from the project root.
 5. Upload the generated `.aab` or signed `.apk` from `twa/app/build/outputs/`.
 
@@ -28,9 +28,11 @@ build-android.cmd all
 
 Release builds use these environment variables if present:
 ```bat
-set BUBBLEWRAP_KEYSTORE_PASSWORD=your-keystore-password
-set BUBBLEWRAP_KEY_PASSWORD=your-key-password
+set BEEKNALAH_KEYSTORE_PASSWORD=your-keystore-password
+set BEEKNALAH_KEY_PASSWORD=your-key-password
 ```
+
+Legacy `BEKNALAH_*` variable names are still accepted for compatibility.
 
 ## Bubblewrap commands (example)
 ```bash

@@ -1,8 +1,8 @@
 {
-  "packageId": "com.wisdomchiru.beknalah",
+  "packageId": "com.wisdomchiru.beeknalah",
   "host": "Beek-Na-Lah.in",
-  "name": "Beek Na Lah",
-  "launcherName": "Beek Na Lah",
+  "name": "Beek-Na-Lah",
+  "launcherName": "Beek-Na-Lah",
   "display": "standalone",
   "themeColor": "#C0643B",
   "themeColorDark": "#000000",
@@ -16,7 +16,7 @@
   "iconUrl": "https://Beek-Na-Lah.in/icons/icon-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "C:\\Users\\WISDOM~1\\Bek-Nah-Lah\\keystore\\BEKNAL~1.JKS",
+    "path": "C:\\Users\\Wisdom Chiru\\Beek-Nah-Lah\\keystore\\beknalah-release.jks",
     "alias": "beknalah"
   },
   "appVersionName": "4.0.1",

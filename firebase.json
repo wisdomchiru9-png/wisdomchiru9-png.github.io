@@ -1,29 +1,10 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "twa/**",
-      "keystore/**",
-      ".vscode/**",
-      "health-check.mjs",
-      "build-android.cmd",
-      "**/*.exe",
-      "**/*.cmd",
-      "**/*.bat",
-      "**/*.sh",
-      "**/*.apk",
-      "**/*.jar",
-      "**/*.jks",
-      "**/*.dll",
-      "**/*.msi",
-      "**/*.txt",
-      "all-lyrics/**",
-      "songs/**",
-      "all-lyrics/",
-      "songs/"
+      "**/node_modules/**"
     ],
     "rewrites": [
       {

@@ -21,11 +21,11 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'com.wisdomchiru.beknalah',
+    applicationId: 'com.wisdomchiru.beeknalah',
     hostName: 'Beek-Na-Lah.in', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Beek Na Lah', // The application name.
-    launcherName: 'Beek Na Lah', // The name shown on the Android Launcher.
+    name: 'Beek-Na-Lah', // The application name.
+    launcherName: 'Beek-Na-Lah', // The name shown on the Android Launcher.
     versionCode: 5,
     versionName: '4.0.1',
     themeColor: '#C0643B', // The color used for the status bar.
@@ -52,17 +52,21 @@ def twaManifest = [
     orientation: 'default',
 ]
 
-def defaultReleaseKeystore = new File(rootProject.projectDir.parentFile, 'keystore/beknalah-release.jks')
-def releaseKeystorePath = System.getenv('BEKNALAH_KEYSTORE_FILE') ?: defaultReleaseKeystore.absolutePath
+def defaultReleaseKeystoreCandidates = [
+    new File(rootProject.projectDir.parentFile, 'keystore/beeknalah-release.jks'),
+    new File(rootProject.projectDir.parentFile, 'keystore/beknalah-release.jks')
+]
+def defaultReleaseKeystore = defaultReleaseKeystoreCandidates.find { it.exists() } ?: defaultReleaseKeystoreCandidates[0]
+def releaseKeystorePath = System.getenv('BEEKNALAH_KEYSTORE_FILE') ?: System.getenv('BEKNALAH_KEYSTORE_FILE') ?: defaultReleaseKeystore.absolutePath
 def releaseKeystore = file(releaseKeystorePath)
-def releaseKeyAlias = System.getenv('BEKNALAH_KEY_ALIAS') ?: 'beknalah'
-def releaseStorePassword = System.getenv('BEKNALAH_KEYSTORE_PASSWORD') ?: System.getenv('BUBBLEWRAP_KEYSTORE_PASSWORD')
-def releaseKeyPassword = System.getenv('BEKNALAH_KEY_PASSWORD') ?: System.getenv('BUBBLEWRAP_KEY_PASSWORD') ?: releaseStorePassword
+def releaseKeyAlias = System.getenv('BEEKNALAH_KEY_ALIAS') ?: System.getenv('BEKNALAH_KEY_ALIAS') ?: 'beknalah'
+def releaseStorePassword = System.getenv('BEEKNALAH_KEYSTORE_PASSWORD') ?: System.getenv('BEKNALAH_KEYSTORE_PASSWORD') ?: System.getenv('BUBBLEWRAP_KEYSTORE_PASSWORD')
+def releaseKeyPassword = System.getenv('BEEKNALAH_KEY_PASSWORD') ?: System.getenv('BEKNALAH_KEY_PASSWORD') ?: System.getenv('BUBBLEWRAP_KEY_PASSWORD') ?: releaseStorePassword
 def hasReleaseSigning = releaseKeystore.exists() && releaseStorePassword && releaseKeyPassword
 
 android {
     compileSdkVersion 36
-    namespace "com.wisdomchiru.beknalah"
+    namespace "com.wisdomchiru.beeknalah"
     signingConfigs {
         release {
             if (hasReleaseSigning) {
@@ -74,7 +78,7 @@ android {
         }
     }
     defaultConfig {
-        applicationId "com.wisdomchiru.beknalah"
+        applicationId "com.wisdomchiru.beeknalah"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode twaManifest.versionCode
@@ -101,7 +105,7 @@ android {
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://wisdomchiru9-png.github.io/'
+            resValue "string", "fullScopeUrl", 'https://Beek-Na-Lah.in/'
         
 
         

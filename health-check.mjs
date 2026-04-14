@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
+const hostingRoot = getHostingRoot();
 const failures = [];
 const warnings = [];
 
@@ -38,6 +39,36 @@ function readText(relativePath) {
 
 function pathExists(relativePath) {
   return fs.existsSync(path.join(root, relativePath));
+}
+
+function projectPath(relativePath, baseDir = '.') {
+  return path.join(root, baseDir === '.' ? relativePath : path.join(baseDir, relativePath));
+}
+
+function readTextFrom(baseDir, relativePath) {
+  return fs.readFileSync(projectPath(relativePath, baseDir), 'utf8');
+}
+
+function readBufferFrom(baseDir, relativePath) {
+  return fs.readFileSync(projectPath(relativePath, baseDir));
+}
+
+function pathExistsIn(baseDir, relativePath) {
+  return fs.existsSync(projectPath(relativePath, baseDir));
+}
+
+function getHostingRoot() {
+  try {
+    if (!pathExists('firebase.json')) {
+      return '.';
+    }
+
+    const config = JSON.parse(stripBom(readText('firebase.json')));
+    const configuredRoot = config?.hosting?.public;
+    return typeof configuredRoot === 'string' && configuredRoot.trim() ? configuredRoot.trim() : '.';
+  } catch {
+    return '.';
+  }
 }
 
 function runCommand(command, args, options = {}) {
@@ -116,8 +147,88 @@ function getRequiredFiles() {
     'lyrics-data/songs-map.json',
     'twa/gradlew.bat',
     'twa/app/src/main/AndroidManifest.xml',
-    'twa/app/src/main/res/raw/web_app_manifest.json'
+    'twa/app/src/main/res/raw/web_app_manifest.json',
+    'twa/app/src/main/res/values/strings.xml',
+    'twa/twa-manifest.json'
   ];
+}
+
+function getHostedRequiredFiles() {
+  return [
+    'index.html',
+    'download.html',
+    'install-apk.html',
+    'script.js',
+    'download.js',
+    'style.css',
+    'sw.js',
+    'manifest.json',
+    'apple-touch-icon.png',
+    '.well-known/assetlinks.json',
+    'admin/index.html',
+    'admin/admin.css',
+    'admin/admin.js',
+    'all-lyrics/index.txt',
+    'lyrics-data/songs-map.json',
+    'icons/logo-mark.png',
+    'icons/icon-192.png',
+    'icons/icon-512.png',
+    'images/qr-download.png',
+    'images/install-guide.svg'
+  ];
+}
+
+function getMirroredWebFiles() {
+  return [
+    'index.html',
+    'download.html',
+    'install-apk.html',
+    'script.js',
+    'download.js',
+    'style.css',
+    'sw.js',
+    'manifest.json',
+    'firebase-config.js',
+    'apple-touch-icon.png',
+    '.well-known/assetlinks.json',
+    'admin/index.html',
+    'admin/admin.css',
+    'admin/admin.js',
+    'all-lyrics/index.txt',
+    'lyrics-data/songs-map.json',
+    'icons/logo-mark.png',
+    'icons/icon-192.png',
+    'icons/icon-512.png',
+    'images/qr-download.png',
+    'images/install-guide.svg'
+  ];
+}
+
+function normalizeManifestValue(field, value) {
+  if (['background_color', 'theme_color'].includes(field)) {
+    return String(value || '').toLowerCase();
+  }
+
+  return value || '';
+}
+
+function normalizeManifestIcons(icons) {
+  return JSON.stringify(
+    (icons || []).map((icon) => ({
+      src: icon?.src || '',
+      sizes: icon?.sizes || '',
+      type: icon?.type || '',
+      purpose: icon?.purpose || ''
+    }))
+  );
+}
+
+function readSongFileNames(baseDir = '.') {
+  return fs.readdirSync(projectPath('all-lyrics/songs', baseDir)).sort();
+}
+
+function normalizeFingerprint(fingerprint) {
+  return String(fingerprint || '').trim().toUpperCase();
 }
 
 function checkRequiredFiles() {
@@ -145,10 +256,10 @@ function checkManifestSync() {
       'description'
     ];
     const mismatches = fields
-      .filter((field) => (webManifest[field] || '') !== (embeddedManifest[field] || ''))
+      .filter((field) => normalizeManifestValue(field, webManifest[field]) !== normalizeManifestValue(field, embeddedManifest[field]))
       .map((field) => `${field}: web=${JSON.stringify(webManifest[field] || '')}, android=${JSON.stringify(embeddedManifest[field] || '')}`);
-    const webIcons = JSON.stringify(webManifest.icons || []);
-    const embeddedIcons = JSON.stringify(embeddedManifest.icons || []);
+    const webIcons = normalizeManifestIcons(webManifest.icons);
+    const embeddedIcons = normalizeManifestIcons(embeddedManifest.icons);
 
     if (webIcons !== embeddedIcons) {
       mismatches.push('icons: web and embedded manifest icon lists differ');
@@ -162,6 +273,145 @@ function checkManifestSync() {
     pass('Manifest sync', 'Web manifest and embedded Android web manifest are aligned.');
   } catch (error) {
     fail('Manifest sync', error instanceof Error ? error.message : String(error));
+  }
+}
+
+function checkTwaOriginConfig() {
+  try {
+    const twaManifest = JSON.parse(stripBom(readText('twa/twa-manifest.json')));
+    const assetLinks = JSON.parse(stripBom(readText('.well-known/assetlinks.json')));
+    const stringsText = readText('twa/app/src/main/res/values/strings.xml');
+    const buildGradleText = readText('twa/app/build.gradle');
+    const expectedSite = `https://${twaManifest.host}`;
+    const expectedFullScopeUrl = `${expectedSite}/`;
+    const expectedWebManifestUrl = `${expectedSite}/manifest.json`;
+    const issues = [];
+
+    const stringsSite = stringsText.match(/\\"site\\":\s*\\"([^"]+)\\"/)?.[1] || '';
+    const hostName = buildGradleText.match(/hostName:\s*'([^']+)'/)?.[1] || '';
+    const webManifestUrl = buildGradleText.match(/webManifestUrl",\s*'([^']+)'/)?.[1] || '';
+    const fullScopeUrl = buildGradleText.match(/fullScopeUrl",\s*'([^']+)'/)?.[1] || '';
+
+    if (stringsSite !== expectedSite) {
+      issues.push(`strings.xml site=${JSON.stringify(stringsSite)}, expected=${JSON.stringify(expectedSite)}`);
+    }
+
+    if (hostName !== twaManifest.host) {
+      issues.push(`build.gradle hostName=${JSON.stringify(hostName)}, twa-manifest host=${JSON.stringify(twaManifest.host)}`);
+    }
+
+    if (webManifestUrl !== expectedWebManifestUrl) {
+      issues.push(`build.gradle webManifestUrl=${JSON.stringify(webManifestUrl)}, expected=${JSON.stringify(expectedWebManifestUrl)}`);
+    }
+
+    if (fullScopeUrl !== expectedFullScopeUrl) {
+      issues.push(`build.gradle fullScopeUrl=${JSON.stringify(fullScopeUrl)}, expected=${JSON.stringify(expectedFullScopeUrl)}`);
+    }
+
+    const trustedAssetLink = assetLinks.find((entry) => Array.isArray(entry?.relation) && entry.relation.includes('delegate_permission/common.handle_all_urls'));
+    const packageName = trustedAssetLink?.target?.package_name || '';
+    const assetFingerprints = new Set((trustedAssetLink?.target?.sha256_cert_fingerprints || []).map(normalizeFingerprint));
+    const manifestFingerprints = new Set((twaManifest.fingerprints || []).map((entry) => normalizeFingerprint(entry?.value)));
+
+    if (packageName !== twaManifest.packageId) {
+      issues.push(`assetlinks package_name=${JSON.stringify(packageName)}, expected=${JSON.stringify(twaManifest.packageId)}`);
+    }
+
+    const missingFingerprints = [...manifestFingerprints].filter((fingerprint) => !assetFingerprints.has(fingerprint));
+    const extraFingerprints = [...assetFingerprints].filter((fingerprint) => !manifestFingerprints.has(fingerprint));
+    if (missingFingerprints.length || extraFingerprints.length) {
+      issues.push(
+        [
+          missingFingerprints.length ? `missing fingerprints: ${missingFingerprints.join(', ')}` : '',
+          extraFingerprints.length ? `extra fingerprints: ${extraFingerprints.join(', ')}` : ''
+        ].filter(Boolean).join(' | ')
+      );
+    }
+
+    if (issues.length > 0) {
+      fail('TWA origin config', issues.join(' | '));
+      return;
+    }
+
+    pass('TWA origin config', `Host ${twaManifest.host} is aligned across Bubblewrap config, Android resources, and asset links.`);
+  } catch (error) {
+    fail('TWA origin config', error instanceof Error ? error.message : String(error));
+  }
+}
+
+function checkHostingLayout() {
+  if (hostingRoot === '.') {
+    pass('Hosting layout', 'Firebase hosting is configured to serve the project root.');
+    return;
+  }
+
+  try {
+    if (!pathExists(hostingRoot)) {
+      fail('Hosting layout', `firebase.json points to ${hostingRoot}, but that directory does not exist.`);
+      return;
+    }
+
+    const missing = getHostedRequiredFiles().filter((file) => !pathExistsIn(hostingRoot, file));
+    if (missing.length > 0) {
+      fail('Hosting layout', `firebase.json points to ${hostingRoot}, but required hosted files are missing: ${missing.join(', ')}`);
+      return;
+    }
+
+    pass('Hosting layout', `firebase.json points to ${hostingRoot}, and the required hosted files are present.`);
+  } catch (error) {
+    fail('Hosting layout', error instanceof Error ? error.message : String(error));
+  }
+}
+
+function checkHostedMirrorSync() {
+  if (hostingRoot === '.') {
+    return;
+  }
+
+  try {
+    const mismatchedFiles = getMirroredWebFiles().filter((file) => {
+      if (!pathExists(file) || !pathExistsIn(hostingRoot, file)) {
+        return false;
+      }
+
+      return Buffer.compare(readBufferFrom('.', file), readBufferFrom(hostingRoot, file)) !== 0;
+    });
+
+    const rootSongFiles = readSongFileNames('.');
+    const hostedSongFiles = pathExistsIn(hostingRoot, 'all-lyrics/songs') ? readSongFileNames(hostingRoot) : [];
+    const hostedSongSet = new Set(hostedSongFiles);
+    const rootSongSet = new Set(rootSongFiles);
+    const missingSongs = rootSongFiles.filter((file) => !hostedSongSet.has(file));
+    const extraSongs = hostedSongFiles.filter((file) => !rootSongSet.has(file));
+    const mismatchedSongs = [];
+
+    if (!missingSongs.length && !extraSongs.length) {
+      for (const file of rootSongFiles) {
+        if (Buffer.compare(readBufferFrom('.', `all-lyrics/songs/${file}`), readBufferFrom(hostingRoot, `all-lyrics/songs/${file}`)) !== 0) {
+          mismatchedSongs.push(file);
+          if (mismatchedSongs.length >= 5) {
+            break;
+          }
+        }
+      }
+    }
+
+    if (mismatchedFiles.length || missingSongs.length || extraSongs.length || mismatchedSongs.length) {
+      fail(
+        'Hosted mirror sync',
+        [
+          mismatchedFiles.length ? `mismatched files: ${mismatchedFiles.join(', ')}` : '',
+          missingSongs.length ? `missing song files: ${missingSongs.slice(0, 10).join(', ')}${missingSongs.length > 10 ? ', ...' : ''}` : '',
+          extraSongs.length ? `extra song files: ${extraSongs.slice(0, 10).join(', ')}${extraSongs.length > 10 ? ', ...' : ''}` : '',
+          mismatchedSongs.length ? `mismatched song files: ${mismatchedSongs.join(', ')}` : ''
+        ].filter(Boolean).join(' | ')
+      );
+      return;
+    }
+
+    pass('Hosted mirror sync', `${hostingRoot} matches the checked source files and all ${rootSongFiles.length} song files.`);
+  } catch (error) {
+    fail('Hosted mirror sync', error instanceof Error ? error.message : String(error));
   }
 }
 
@@ -397,12 +647,29 @@ function checkOptionalAssets() {
     const notes = [];
     const scriptText = readText('script.js');
     const downloadText = readText('download.html');
+    const installApkText = readText('install-apk.html');
+    const downloadScriptText = readText('download.js');
     const audioDisabled = /const AUDIO_FEATURE_ENABLED\s*=\s*false\s*;/.test(scriptText);
-    const usesLocalApk = /href=["']downloads\/Beek-nah-lah\.apk["']/.test(downloadText);
-    const hasDownloadLink = /href=["']https:\/\/github\.com\/wisdomchiru9-png\/wisdomchiru9-png\.github\.io\/releases\/download\/v4\.0\.1\/Beek-nah-lah\.apk["']/.test(downloadText);
+    const localApkPattern = /downloads\/Beek-Na-Lah\.apk/;
+    const hostedApkPattern = /https:\/\/github\.com\/wisdomchiru9-png\/wisdomchiru9-png\.github\.io\/releases\/download\/v([\d.]+)\/Beek-Na-Lah\.apk/;
+    const usesInstallPage = /href=["']install-apk\.html["']/.test(downloadText);
+    const installUsesLocalApk = localApkPattern.test(installApkText);
+    const scriptUsesLocalApk = localApkPattern.test(downloadScriptText);
+    const installHostedMatch = installApkText.match(hostedApkPattern);
+    const scriptHostedMatch = downloadScriptText.match(hostedApkPattern);
+    const hostedVersions = new Set([installHostedMatch?.[1], scriptHostedMatch?.[1]].filter(Boolean));
 
-    if (!usesLocalApk && !hasDownloadLink) {
-      warn('Optional assets', 'download.html does not point to the v4.0.1 Beek-nah-lah.apk or local downloads/Beek-nah-lah.apk.');
+    if (!usesInstallPage) {
+      warn('Optional assets', 'download.html no longer routes Android installs through install-apk.html.');
+    }
+
+    if (hostedVersions.size > 1) {
+      fail('Optional assets', `install-apk.html and download.js reference different hosted APK versions: ${[...hostedVersions].join(', ')}`);
+      return;
+    }
+
+    if (!installUsesLocalApk && !scriptUsesLocalApk && hostedVersions.size === 0) {
+      warn('Optional assets', 'install-apk.html and download.js do not point to a hosted or local Beek-Na-Lah.apk.');
     }
 
     if (audioDisabled) {
@@ -414,14 +681,14 @@ function checkOptionalAssets() {
       return;
     }
 
-    if (usesLocalApk) {
-      if (!pathExists('downloads/Beek-nah-lah.apk')) {
-        warn('Optional assets', 'download.html points to downloads/Beek-nah-lah.apk, but that file is missing.');
+    if (installUsesLocalApk || scriptUsesLocalApk) {
+      if (!pathExists('downloads/Beek-Na-Lah.apk')) {
+        warn('Optional assets', 'install flow points to downloads/Beek-Na-Lah.apk, but that file is missing.');
         return;
       }
       notes.push('local APK is present');
-    } else {
-      notes.push('download page uses a hosted APK link');
+    } else if (hostedVersions.size === 1) {
+      notes.push(`hosted APK link uses v${[...hostedVersions][0]}`);
     }
 
     pass('Optional assets', `${notes.join('; ')}.`);
@@ -430,11 +697,14 @@ function checkOptionalAssets() {
   }
 }
 
-console.log('Beek Na Lah Health Check');
+console.log('Beek-Na-Lah Health Check');
 console.log('');
 
 checkRequiredFiles();
 checkManifestSync();
+checkTwaOriginConfig();
+checkHostingLayout();
+checkHostedMirrorSync();
 checkJavaScriptSyntax();
 checkLyricsData();
 checkFirebaseConfig();
