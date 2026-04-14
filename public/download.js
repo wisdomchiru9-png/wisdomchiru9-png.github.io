@@ -29,7 +29,7 @@ function updateDownloadPageForPlatform() {
   if (!isIOS) {
     if (window.location.pathname.endsWith('/install-apk.html') || window.location.pathname.endsWith('install-apk.html')) {
       window.setTimeout(() => {
-        window.location.href = 'https://github.com/wisdomchiru9-png/wisdomchiru9-png.github.io/releases/download/v4.0.1/Beek-Na-Lah.apk';
+        window.location.href = 'downloads/Beek-Na-Lah.apk';
       }, 600);
     }
     return;
