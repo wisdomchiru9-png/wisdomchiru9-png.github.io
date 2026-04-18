@@ -1,29 +1,29 @@
 {
   "packageId": "com.wisdomchiru.beeknalah",
-  "host": "Beek-Na-Lah.in",
+  "host": "beek-na-lah-59775.web.app",
   "name": "Beek-Na-Lah",
   "launcherName": "Beek-Na-Lah",
   "display": "standalone",
-  "themeColor": "#C0643B",
-  "themeColorDark": "#000000",
-  "navigationColor": "#000000",
-  "navigationColorDark": "#000000",
-  "navigationDividerColor": "#000000",
-  "navigationDividerColorDark": "#000000",
-  "backgroundColor": "#F0E6DA",
+  "themeColor": "#FF6A88",
+  "themeColorDark": "#2C1810",
+  "navigationColor": "#2C1810",
+  "navigationColorDark": "#2C1810",
+  "navigationDividerColor": "#2C1810",
+  "navigationDividerColorDark": "#2C1810",
+  "backgroundColor": "#2C1810",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://Beek-Na-Lah.in/icons/icon-512.png",
+  "iconUrl": "https://beek-na-lah-59775.web.app/icons/icon-512.svg",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "C:\\Users\\Wisdom Chiru\\Beek-Nah-Lah\\keystore\\beknalah-release.jks",
     "alias": "beknalah"
   },
-  "appVersionName": "4.0.1",
-  "appVersionCode": 5,
+  "appVersionName": "4.0.2",
+  "appVersionCode": 6,
   "shortcuts": [],
   "generatorApp": "unknown",
-  "webManifestUrl": "https://Beek-Na-Lah.in/manifest.json",
+  "webManifestUrl": "https://beek-na-lah-59775.web.app/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -32,7 +32,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://Beek-Na-Lah.in/",
+  "fullScopeUrl": "https://beek-na-lah-59775.web.app/",
   "minSdkVersion": 21,
   "orientation": "default",
   "fingerprints": [
@@ -46,5 +46,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "4.0.1"
+  "appVersion": "4.0.2"
 }

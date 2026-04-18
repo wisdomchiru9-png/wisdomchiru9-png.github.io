@@ -4,7 +4,16 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/*.apk",
+      "images/bek-na-lah-cover.png"
+    ],
+    "redirects": [
+      {
+        "source": "/downloads/Beek-Na-Lah.apk",
+        "destination": "https://raw.githubusercontent.com/wisdomchiru9-png/wisdomchiru9-png.github.io/2cbfd34/downloads/Beek-Na-Lah.apk",
+        "type": 302
+      }
     ],
     "rewrites": [
       {

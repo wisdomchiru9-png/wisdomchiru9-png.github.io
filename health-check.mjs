@@ -170,9 +170,8 @@ function getHostedRequiredFiles() {
     'admin/admin.js',
     'all-lyrics/index.txt',
     'lyrics-data/songs-map.json',
-    'icons/logo-mark.png',
-    'icons/icon-192.png',
-    'icons/icon-512.png',
+    'icons/icon-192.svg',
+    'icons/icon-512.svg',
     'images/qr-download.png',
     'images/install-guide.svg'
   ];
@@ -196,9 +195,8 @@ function getMirroredWebFiles() {
     'admin/admin.js',
     'all-lyrics/index.txt',
     'lyrics-data/songs-map.json',
-    'icons/logo-mark.png',
-    'icons/icon-192.png',
-    'icons/icon-512.png',
+    'icons/icon-192.svg',
+    'icons/icon-512.svg',
     'images/qr-download.png',
     'images/install-guide.svg'
   ];
@@ -651,7 +649,7 @@ function checkOptionalAssets() {
     const downloadScriptText = readText('download.js');
     const audioDisabled = /const AUDIO_FEATURE_ENABLED\s*=\s*false\s*;/.test(scriptText);
     const localApkPattern = /downloads\/Beek-Na-Lah\.apk/;
-    const hostedApkPattern = /https:\/\/github\.com\/wisdomchiru9-png\/wisdomchiru9-png\.github\.io\/releases\/download\/v([\d.]+)\/Beek-Na-Lah\.apk/;
+    const hostedApkPattern = /https:\/\/raw\.githubusercontent\.com\/wisdomchiru9-png\/wisdomchiru9-png\.github\.io\/([0-9a-f]+)\/downloads\/Beek-Na-Lah\.apk/;
     const usesInstallPage = /href=["']install-apk\.html["']/.test(downloadText);
     const installUsesLocalApk = localApkPattern.test(installApkText);
     const scriptUsesLocalApk = localApkPattern.test(downloadScriptText);

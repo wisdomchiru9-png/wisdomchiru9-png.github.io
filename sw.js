@@ -1,17 +1,16 @@
-const CACHE_NAME = 'Beek-Na-Lah-v24';
+const CACHE_NAME = 'Beek-Na-Lah-v27';
 const APP_SHELL = [
   './',
   'index.html',
   'download.html',
   'install-apk.html',
-  'style.css',
+  'style.css?v=2',
   'script.js?v=18',
   'download.js',
   'manifest.json',
-  'apple-touch-icon.png',
-  'icons/logo-mark.png',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
+  'icons/logo-mark.svg?v=2',
+  'icons/icon-192.svg',
+  'icons/icon-512.svg',
   'images/qr-download.png',
   'images/install-guide.svg',
   'admin/index.html',

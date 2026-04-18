@@ -511,6 +511,15 @@ async function ensureAssetsLoaded() {
   if (assetsLoaded) return;
   await loadAssets();
   assetsLoaded = true;
+  
+  // Hide splash screen
+  const splash = document.getElementById('splash');
+  if (splash) {
+    splash.classList.add('fade-out');
+    setTimeout(() => {
+      splash.remove();
+    }, 600);
+  }
 }
 
 function updateCounts() {

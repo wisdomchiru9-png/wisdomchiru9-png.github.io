@@ -3,7 +3,7 @@
 This project already works as a PWA with offline support via `sw.js`.
 
 ## Current app values
-1. Domain: `https://Beek-Na-Lah.in/`
+1. Domain: `https://beek-na-lah-59775.web.app/`
 2. Android package: `com.wisdomchiru.beeknalah`
 3. Signing alias: keep your existing keystore alias, or set it explicitly with `BEEKNALAH_KEY_ALIAS`
 

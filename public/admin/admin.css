@@ -11,16 +11,16 @@
   --admin-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.24);
   --admin-text: #edf3ff;
   --admin-muted: #9fb0ca;
-  --admin-accent: #ff8b4d;
-  --admin-accent-strong: #ff5e2f;
+  --admin-accent: #FF6A88;
+  --admin-accent-strong: #FF3D68;
   --admin-cyan: #72dbff;
   --admin-green: #72e3ae;
   --admin-danger: #ff8c8c;
-  --lock-glow-a: #ff7a18;
-  --lock-glow-b: #ffd000;
-  --lock-glow-c: #72dbff;
-  --lock-glow-accent: #ff9b3d;
-  --lock-glow-halo: rgba(255, 122, 24, 0.44);
+  --lock-glow-a: #FF9A8B;
+  --lock-glow-b: #FF6A88;
+  --lock-glow-c: #FF99AC;
+  --lock-glow-accent: #FF6A88;
+  --lock-glow-halo: rgba(255, 106, 136, 0.44);
 }
 
 * {

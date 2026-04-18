@@ -22,19 +22,19 @@ plugins {
 
 def twaManifest = [
     applicationId: 'com.wisdomchiru.beeknalah',
-    hostName: 'Beek-Na-Lah.in', // The domain being opened in the TWA.
+    hostName: 'beek-na-lah-59775.web.app', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Beek-Na-Lah', // The application name.
     launcherName: 'Beek-Na-Lah', // The name shown on the Android Launcher.
-    versionCode: 5,
-    versionName: '4.0.1',
-    themeColor: '#C0643B', // The color used for the status bar.
-    themeColorDark: '#000000', // The color used for the dark status bar.
-    navigationColor: '#000000', // The color used for the navigation bar.
-    navigationColorDark: '#000000', // The color used for the dark navbar.
-    navigationDividerColor: '#000000', // The navbar divider color.
-    navigationDividerColorDark: '#000000', // The dark navbar divider color.
-    backgroundColor: '#F0E6DA', // The color used for the splash screen background.
+    versionCode: 6,
+    versionName: '4.0.2',
+    themeColor: '#FF6A88', // The color used for the status bar.
+    themeColorDark: '#2C1810', // The color used for the dark status bar.
+    navigationColor: '#2C1810', // The color used for the navigation bar.
+    navigationColorDark: '#2C1810', // The color used for the dark navbar.
+    navigationDividerColor: '#2C1810', // The navbar divider color.
+    navigationDividerColorDark: '#2C1810', // The dark navbar divider color.
+    backgroundColor: '#2C1810', // The color used for the splash screen background.
     enableNotifications: true, // Set to true to enable notification delegation.
     // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
@@ -100,12 +100,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://Beek-Na-Lah.in/manifest.json'
+            resValue "string", "webManifestUrl", 'https://beek-na-lah-59775.web.app/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://Beek-Na-Lah.in/'
+            resValue "string", "fullScopeUrl", 'https://beek-na-lah-59775.web.app/'
         
 
         
