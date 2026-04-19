@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Beek-Na-Lah-v4k-v1';
+const CACHE_NAME = 'Beek-Na-Lah-Offline-v1';
 const APP_SHELL = [
   './',
   'index.html',
@@ -45,10 +45,16 @@ self.addEventListener('install', (event) => {
       if (mapRes.ok) {
         const map = await mapRes.json();
         const songUrls = Object.values(map).map((name) => encodeURI(`all-lyrics/songs/${name}`));
-        // Chunk song caching to avoid blocking
-        const chunkSize = 50;
-        for (let i = 0; i < songUrls.length; i += chunkSize) {
-          const chunk = songUrls.slice(i, i + chunkSize);
+        
+        // Bundle all songs and attempt to bundle audio if exists
+        const audioUrls = Object.keys(map).map(num => `all-lyrics/audio/${num}.mp3`);
+        
+        const allToCache = [...songUrls, ...audioUrls];
+        
+        // Chunk caching to avoid blocking
+        const chunkSize = 40;
+        for (let i = 0; i < allToCache.length; i += chunkSize) {
+          const chunk = allToCache.slice(i, i + chunkSize);
           await cacheUrls(cache, chunk);
         }
 
@@ -59,6 +65,25 @@ self.addEventListener('install', (event) => {
       console.error('Pre-caching failed:', err);
     }
   })());
+});
+
+self.addEventListener('fetch', (event) => {
+  // Network-first for dynamic stuff, Cache-first for assets
+  const url = new URL(event.request.url);
+  
+  if (APP_SHELL.includes(url.pathname) || url.pathname.includes('all-lyrics')) {
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request);
+      })
+    );
+  } else {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request);
+      })
+    );
+  }
 });
 
 self.addEventListener('activate', (event) => {

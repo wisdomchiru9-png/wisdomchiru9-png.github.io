@@ -18,7 +18,7 @@ let audioTryToken = 0;
 let audioAvailable = false;
 let audioIndex = null;
 let aiSearchEnabled = true;
-const AUDIO_FEATURE_ENABLED = false;
+const AUDIO_FEATURE_ENABLED = true;
 
 const AI_INSIGHT_TEMPLATES = {
   praise: [
