@@ -51,11 +51,11 @@ self.addEventListener('install', (event) => {
         
         const allToCache = [...songUrls, ...audioUrls];
         
-        // Chunk caching to avoid blocking
-        const chunkSize = 40;
+        // Aggressive parallel caching
+        const chunkSize = 50;
         for (let i = 0; i < allToCache.length; i += chunkSize) {
           const chunk = allToCache.slice(i, i + chunkSize);
-          await cacheUrls(cache, chunk);
+          await Promise.allSettled(chunk.map(url => cache.add(url)));
         }
 
         const clients = await self.clients.matchAll();
@@ -109,15 +109,6 @@ self.addEventListener('fetch', (event) => {
       return fetch(event.request);
     }
     if (url.pathname.startsWith('/admin')) {
-      return fetch(event.request, { cache: 'no-store' });
-    }
-    if (url.pathname.endsWith('/script.js')) {
-      return fetch(event.request, { cache: 'no-store' });
-    }
-    if (url.pathname.startsWith('/all-lyrics/audio/')) {
-      return fetch(event.request, { cache: 'no-store' });
-    }
-    if (url.pathname.endsWith('.apk')) {
       return fetch(event.request);
     }
 
@@ -127,11 +118,11 @@ self.addEventListener('fetch', (event) => {
 
     try {
       const response = await fetch(event.request);
-      if (response && response.status === 200 && response.type === 'basic') {
+      if (response && response.status === 200) {
         try {
           await cache.put(event.request, response.clone());
         } catch (err) {
-          // Ignore cache put errors (e.g., chrome-extension requests).
+          // Ignore cache put errors
         }
       }
       return response;
