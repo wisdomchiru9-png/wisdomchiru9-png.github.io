@@ -24,17 +24,17 @@ def twaManifest = [
     applicationId: 'com.wisdomchiru.beeknalah',
     hostName: 'beek-na-lah-59775.web.app', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Beek-Na-Lah', // The application name.
-    launcherName: 'Beek-Na-Lah', // The name shown on the Android Launcher.
-    versionCode: 6,
-    versionName: '4.0.2',
-    themeColor: '#FF6A88', // The color used for the status bar.
-    themeColorDark: '#2C1810', // The color used for the dark status bar.
-    navigationColor: '#2C1810', // The color used for the navigation bar.
-    navigationColorDark: '#2C1810', // The color used for the dark navbar.
-    navigationDividerColor: '#2C1810', // The navbar divider color.
-    navigationDividerColorDark: '#2C1810', // The dark navbar divider color.
-    backgroundColor: '#2C1810', // The color used for the splash screen background.
+    name: 'Bek Na Lah', // The application name.
+    launcherName: 'Bek Na Lah', // The name shown on the Android Launcher.
+    versionCode: 7,
+    versionName: '4.1.0',
+    themeColor: '#0EA5E9', // The color used for the status bar.
+    themeColorDark: '#020617', // The color used for the dark status bar.
+    navigationColor: '#020617', // The color used for the navigation bar.
+    navigationColorDark: '#020617', // The color used for the dark navbar.
+    navigationDividerColor: '#020617', // The navbar divider color.
+    navigationDividerColorDark: '#020617', // The dark navbar divider color.
+    backgroundColor: '#020617', // The color used for the splash screen background.
     enableNotifications: true, // Set to true to enable notification delegation.
     // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
