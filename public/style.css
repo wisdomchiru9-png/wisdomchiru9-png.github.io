@@ -451,22 +451,26 @@ body.theme-dark {
   gap: 8px;
   padding: 10px 12px;
   border-radius: 12px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(243, 233, 220, 0.7));
+  background: var(--paper-strong);
+  color: var(--ink);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-glow);
 }
 
 .index-item:hover {
-  background: var(--highlight);
+  background: var(--glass);
   transform: translateX(2px) translateY(-1px);
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent);
 }
 
 .index-item.active {
   background: var(--metallic-dark);
   color: #fff;
-  box-shadow: 0 10px 20px rgba(176, 74, 47, 0.35);
+  box-shadow: 0 10px 20px rgba(0, 209, 255, 0.35);
+  border-color: var(--highlight);
 }
 
 .index-item .idx {
@@ -487,9 +491,10 @@ body.theme-dark {
   text-transform: uppercase;
   padding: 2px 6px;
   border-radius: 999px;
-  background: rgba(176, 74, 47, 0.15);
+  background: var(--accent-glow);
   color: var(--accent);
   font-weight: 700;
+  border: 1px solid var(--border-glow);
 }
 
 .recent {
@@ -540,17 +545,18 @@ body.theme-dark {
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--paper-strong);
   border-radius: 10px;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border-glow);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .recent-item:hover {
   transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 10px 18px rgba(19, 14, 9, 0.12);
+  background: var(--glass);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.4);
+  border-color: var(--accent);
 }
 
 .recent-song {
