@@ -1,8 +1,20 @@
+let readerSettings = {
+  fontSize: 1.1,
+  lineHeight: 1.8,
+  fontMode: 'serif',
+  theme: 'light',
+  autoPlayNext: false,
+  rememberLast: true,
+  showAudio: true,
+  fullView: false,
+  aiSearchEnabled: true,
+  favoritesOnly: false
+};
+
 let entries = [];
 let filteredEntries = [];
 let songMap = {};
 let currentNum = null;
-let favoritesOnly = false;
 let searchTerm = '';
 let favorites = new Set();
 let recent = [];
@@ -17,7 +29,6 @@ let speechActive = false;
 let audioTryToken = 0;
 let audioAvailable = false;
 let audioIndex = null;
-let aiSearchEnabled = true;
 const AUDIO_FEATURE_ENABLED = true;
 
 const AI_INSIGHT_TEMPLATES = {
@@ -57,21 +68,10 @@ function generateAIInsight(title, body) {
   
   const templates = AI_INSIGHT_TEMPLATES[category];
   const seed = title.length + body.length;
-   return templates[seed % templates.length];
- }
- 
- let readerSettings = {
-  fontSize: 1.1,
-  lineHeight: 1.8,
-  fontMode: 'serif',
-  theme: 'light',
-  autoPlayNext: false,
-  rememberLast: true,
-  showAudio: true,
-  fullView: false
-};
+  return templates[seed % templates.length];
+}
 
- const indexListEl = document.getElementById('index-list');
+const indexListEl = document.getElementById('index-list');
 const songCountEl = document.getElementById('song-count');
 const indexCountEl = document.getElementById('index-count');
 const songNumberEl = document.getElementById('song-number');
@@ -259,6 +259,8 @@ function loadReaderSettings() {
     if (typeof data.rememberLast === 'boolean') readerSettings.rememberLast = data.rememberLast;
     if (typeof data.showAudio === 'boolean') readerSettings.showAudio = data.showAudio;
     if (typeof data.fullView === 'boolean') readerSettings.fullView = data.fullView;
+    if (typeof data.aiSearchEnabled === 'boolean') readerSettings.aiSearchEnabled = data.aiSearchEnabled;
+    if (typeof data.favoritesOnly === 'boolean') readerSettings.favoritesOnly = data.favoritesOnly;
   } catch (err) {
     // ignore parse errors
   }
@@ -277,6 +279,14 @@ function applyReaderSettings() {
   document.body.classList.toggle('full-view', readerSettings.fullView);
   fontToggleBtn.textContent = readerSettings.fontMode === 'serif' ? 'Serif' : 'Sans';
   audioPanel.style.display = readerSettings.showAudio && audioAvailable ? '' : 'none';
+  
+  // Sync persistent UI toggles
+  if (aiSearchToggle) aiSearchToggle.checked = readerSettings.aiSearchEnabled;
+  if (favoritesToggle) {
+    favoritesToggle.classList.toggle('active', readerSettings.favoritesOnly);
+    favoritesToggle.textContent = readerSettings.favoritesOnly ? 'All Songs' : 'Favorites';
+  }
+
   syncSettingsUI();
 }
 
@@ -912,12 +922,12 @@ function applyFilters(options = {}) {
   const term = searchTerm.trim().toLowerCase();
   
   if (!term) {
-    filteredEntries = favoritesOnly ? entries.filter(e => favorites.has(e.num)) : [...entries];
+    filteredEntries = readerSettings.favoritesOnly ? entries.filter(e => favorites.has(e.num)) : [...entries];
   } else {
     // Smart AI Search Logic
-    if (aiSearchEnabled) {
+    if (readerSettings.aiSearchEnabled) {
       filteredEntries = entries.filter((entry) => {
-        if (favoritesOnly && !favorites.has(entry.num)) return false;
+        if (readerSettings.favoritesOnly && !favorites.has(entry.num)) return false;
         
         const titleMatch = entry.title.toLowerCase().includes(term);
         const numMatch = String(entry.num) === term;
@@ -939,7 +949,7 @@ function applyFilters(options = {}) {
     } else {
       // Basic Search
       filteredEntries = entries.filter((entry) => {
-        if (favoritesOnly && !favorites.has(entry.num)) return false;
+        if (readerSettings.favoritesOnly && !favorites.has(entry.num)) return false;
         return (
           entry.title.toLowerCase().includes(term) ||
           String(entry.num).includes(term) ||
@@ -1148,14 +1158,16 @@ reactionButtons.forEach((btn) => {
 });
 
 favoritesToggle.addEventListener('click', () => {
-  favoritesOnly = !favoritesOnly;
-  favoritesToggle.classList.toggle('active', favoritesOnly);
-  favoritesToggle.textContent = favoritesOnly ? 'All Songs' : 'Favorites';
+  readerSettings.favoritesOnly = !readerSettings.favoritesOnly;
+  favoritesToggle.classList.toggle('active', readerSettings.favoritesOnly);
+  favoritesToggle.textContent = readerSettings.favoritesOnly ? 'All Songs' : 'Favorites';
+  saveReaderSettings();
   applyFilters();
 });
 
 aiSearchToggle.addEventListener('change', () => {
-  aiSearchEnabled = aiSearchToggle.checked;
+  readerSettings.aiSearchEnabled = aiSearchToggle.checked;
+  saveReaderSettings();
   applyFilters();
 });
 
