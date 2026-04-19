@@ -17,8 +17,50 @@ let speechActive = false;
 let audioTryToken = 0;
 let audioAvailable = false;
 let audioIndex = null;
+let aiSearchEnabled = true;
 const AUDIO_FEATURE_ENABLED = false;
-let readerSettings = {
+
+const AI_INSIGHT_TEMPLATES = {
+  praise: [
+    "This hymn is a powerful declaration of worship, focusing on the majesty and glory of God. The lyrics encourage a heart of gratitude and reverence.",
+    "A vibrant song of praise that celebrates divine grace and the joy of spiritual devotion. It often resonates in communal worship settings.",
+    "The themes here center on exalting the Creator, using poetic language to describe the wonders of faith and the beauty of holiness."
+  ],
+  trust: [
+    "A comforting song of trust and reliance on divine guidance. It speaks to the soul's need for strength during times of trial.",
+    "This hymn emphasizes the importance of unwavering faith and the peace that comes from surrendering one's path to a higher power.",
+    "The lyrics provide a sense of security and hope, reminding the believer of the constant presence and support available through faith."
+  ],
+  service: [
+    "This hymn is a call to action, encouraging believers to live out their faith through service, love, and dedication to others.",
+    "A motivating song that focuses on the mission of the church and the individual's role in spreading a message of hope and grace.",
+    "The themes highlight the beauty of a life dedicated to a higher purpose, emphasizing sacrifice, labor, and spiritual growth."
+  ],
+  general: [
+    "A classic hymn that reflects deep spiritual truths and the enduring nature of faith across generations.",
+    "This song captures a moment of spiritual reflection, offering a poetic perspective on the relationship between the human and the divine.",
+    "The lyrics provide a timeless message of hope, peace, and the transformative power of spiritual connection."
+  ]
+};
+
+function generateAIInsight(title, body) {
+  const text = (title + ' ' + body).toLowerCase();
+  let category = 'general';
+  
+  if (text.includes('praise') || text.includes('glory') || text.includes('great') || text.includes('hallelujah') || text.includes('king')) {
+    category = 'praise';
+  } else if (text.includes('trust') || text.includes('faith') || text.includes('guide') || text.includes('lead') || text.includes('safe')) {
+    category = 'trust';
+  } else if (text.includes('work') || text.includes('serve') || text.includes('go') || text.includes('labor') || text.includes('soul')) {
+    category = 'service';
+  }
+  
+  const templates = AI_INSIGHT_TEMPLATES[category];
+  const seed = title.length + body.length;
+   return templates[seed % templates.length];
+ }
+ 
+ let readerSettings = {
   fontSize: 1.1,
   lineHeight: 1.8,
   fontMode: 'serif',
@@ -29,7 +71,7 @@ let readerSettings = {
   fullView: false
 };
 
-const indexListEl = document.getElementById('index-list');
+ const indexListEl = document.getElementById('index-list');
 const songCountEl = document.getElementById('song-count');
 const indexCountEl = document.getElementById('index-count');
 const songNumberEl = document.getElementById('song-number');
@@ -100,6 +142,10 @@ const nextBtn = document.getElementById('next-btn');
 const randomBtn = document.getElementById('random-btn');
 const jumpInput = document.getElementById('jump-input');
 const jumpBtn = document.getElementById('jump-btn');
+
+const aiSearchToggle = document.getElementById('ai-search-toggle');
+const aiInsightPanel = document.getElementById('ai-insight-panel');
+const aiInsightContent = document.getElementById('ai-insight-content');
 
 function splitTitleRef(raw) {
   let title = raw.trim();
@@ -846,6 +892,12 @@ async function showSong(num) {
   songMetaEl.innerHTML = parsed.meta.map((line) => `<span>${escapeHtml(line)}</span>`).join('');
   songBodyEl.textContent = parsed.body || text;
 
+  // AI Insight Generation
+  aiInsightContent.textContent = "Generating AI insights...";
+  setTimeout(() => {
+    aiInsightContent.textContent = generateAIInsight(parsed.title || entry.title, parsed.body || text);
+  }, 400);
+
   if (readerSettings.showAudio) {
     loadAudio(num, entry);
   }
@@ -857,29 +909,52 @@ async function showSong(num) {
 
 function applyFilters(options = {}) {
   const { autoSelect = false } = options;
-  let list = [...entries];
-
-  if (favoritesOnly) {
-    list = list.filter((entry) => favorites.has(entry.num));
-  }
-
-  if (searchTerm) {
-    const num = Number(searchTerm);
-    if (!Number.isNaN(num) && searchTerm.length <= 4) {
-      list = list.filter((entry) => entry.num === num || entry.num.toString().includes(searchTerm));
+  const term = searchTerm.trim().toLowerCase();
+  
+  if (!term) {
+    filteredEntries = favoritesOnly ? entries.filter(e => favorites.has(e.num)) : [...entries];
+  } else {
+    // Smart AI Search Logic
+    if (aiSearchEnabled) {
+      filteredEntries = entries.filter((entry) => {
+        if (favoritesOnly && !favorites.has(entry.num)) return false;
+        
+        const titleMatch = entry.title.toLowerCase().includes(term);
+        const numMatch = String(entry.num) === term;
+        const refMatch = entry.ref && entry.ref.toLowerCase().includes(term);
+        
+        // Simple semantic ranking
+        let score = 0;
+        if (numMatch) score += 100;
+        if (titleMatch) score += 50;
+        if (refMatch) score += 30;
+        
+        // Add a bit of fuzzy logic (words starting with term)
+        const words = entry.title.toLowerCase().split(/\s+/);
+        if (words.some(w => w.startsWith(term))) score += 20;
+        
+        entry.searchScore = score;
+        return score > 0;
+      }).sort((a, b) => b.searchScore - a.searchScore);
     } else {
-      list = list.filter((entry) => entry.title.toLowerCase().includes(searchTerm) || entry.rawTitle.toLowerCase().includes(searchTerm));
+      // Basic Search
+      filteredEntries = entries.filter((entry) => {
+        if (favoritesOnly && !favorites.has(entry.num)) return false;
+        return (
+          entry.title.toLowerCase().includes(term) ||
+          String(entry.num).includes(term) ||
+          (entry.ref && entry.ref.toLowerCase().includes(term))
+        );
+      });
     }
   }
 
-  filteredEntries = list;
   renderIndex(filteredEntries);
   updateCounts();
 
-  if (!autoSelect) return;
-  if (filteredEntries.length === 0) return;
+  if (!autoSelect || filteredEntries.length === 0) return;
 
-  const exactNum = Number(searchTerm);
+  const exactNum = Number(term);
   if (!Number.isNaN(exactNum)) {
     const exactEntry = filteredEntries.find((entry) => entry.num === exactNum);
     if (exactEntry) {
@@ -1076,6 +1151,11 @@ favoritesToggle.addEventListener('click', () => {
   favoritesOnly = !favoritesOnly;
   favoritesToggle.classList.toggle('active', favoritesOnly);
   favoritesToggle.textContent = favoritesOnly ? 'All Songs' : 'Favorites';
+  applyFilters();
+});
+
+aiSearchToggle.addEventListener('change', () => {
+  aiSearchEnabled = aiSearchToggle.checked;
   applyFilters();
 });
 
