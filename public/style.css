@@ -1,22 +1,22 @@
 :root {
-  --ink: #F7F0E6;
-  --muted: #A6968A;
-  --paper: #1A0F0A;
-  --paper-strong: #2C1810;
-  --accent: #FF6A88;
-  --accent-2: #4A90E2;
-  --highlight: #FF9A8B;
-  --shadow: rgba(0, 0, 0, 0.4);
-  --sidebar: rgba(26, 15, 10, 0.9);
-  --glass: rgba(44, 24, 16, 0.7);
-  --shadow-deep: rgba(0, 0, 0, 0.6);
-  --shine: rgba(255, 255, 255, 0.2);
-  --border-glow: rgba(255, 106, 136, 0.4);
-  --accent-glow: rgba(255, 106, 136, 0.25);
-  --metallic-light: linear-gradient(135deg, #FF9A8B 0%, #FF6A88 50%, #FF99AC 100%);
-  --metallic-dark: linear-gradient(135deg, #FF6A88 0%, #FF3D68 100%);
-  --emboss-light: 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.3);
-  --emboss-dark: 0 1px 0 rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.5);
+  --ink: #E6EDF3;
+  --muted: #8B949E;
+  --paper: #0D1117;
+  --paper-strong: #161B22;
+  --accent: #00D1FF;
+  --accent-2: #3FB1FF;
+  --highlight: #FFFFFF;
+  --shadow: rgba(0, 0, 0, 0.5);
+  --sidebar: rgba(13, 17, 23, 0.95);
+  --glass: rgba(22, 27, 34, 0.8);
+  --shadow-deep: rgba(0, 0, 0, 0.7);
+  --shine: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(0, 209, 255, 0.3);
+  --accent-glow: rgba(0, 209, 255, 0.2);
+  --metallic-light: linear-gradient(135deg, #3FB1FF 0%, #00D1FF 50%, #007BFF 100%);
+  --metallic-dark: linear-gradient(135deg, #00D1FF 0%, #0056B3 100%);
+  --emboss-light: 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --emboss-dark: 0 1px 0 rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6);
   --font-sans: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
   --font-serif: 'Playfair Display', 'Georgia', serif;
   --song-font-size: 1.15rem;
@@ -26,9 +26,9 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
-  --bg-main: radial-gradient(circle at top left, #2C1810 0%, #1A0F0A 100%);
-  --glow-1: radial-gradient(circle, rgba(255, 106, 136, 0.2), rgba(255, 106, 136, 0));
-  --glow-2: radial-gradient(circle, rgba(74, 144, 226, 0.15), rgba(74, 144, 226, 0));
+  --bg-main: radial-gradient(circle at top left, #161B22 0%, #0D1117 100%);
+  --glow-1: radial-gradient(circle, rgba(0, 209, 255, 0.15), rgba(0, 209, 255, 0));
+  --glow-2: radial-gradient(circle, rgba(63, 177, 255, 0.1), rgba(63, 177, 255, 0));
 }
 
 .splash-screen {

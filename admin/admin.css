@@ -11,16 +11,16 @@
   --admin-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.24);
   --admin-text: #edf3ff;
   --admin-muted: #9fb0ca;
-  --admin-accent: #FF6A88;
-  --admin-accent-strong: #FF3D68;
+  --admin-accent: #00D1FF;
+  --admin-accent-strong: #007BFF;
   --admin-cyan: #72dbff;
   --admin-green: #72e3ae;
   --admin-danger: #ff8c8c;
-  --lock-glow-a: #FF9A8B;
-  --lock-glow-b: #FF6A88;
-  --lock-glow-c: #FF99AC;
-  --lock-glow-accent: #FF6A88;
-  --lock-glow-halo: rgba(255, 106, 136, 0.44);
+  --lock-glow-a: #3FB1FF;
+  --lock-glow-b: #00D1FF;
+  --lock-glow-c: #007BFF;
+  --lock-glow-accent: #00D1FF;
+  --lock-glow-halo: rgba(0, 209, 255, 0.44);
 }
 
 * {

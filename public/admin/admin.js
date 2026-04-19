@@ -11,6 +11,12 @@ const PASSWORD_HASH = '8405d136ee16702cb24ad2d195928e7f93623533afd0bc18f85b99c60
 const SITE_ROOT = '../';
 const LOCKSCREEN_GLOW_PRESETS = [
   {
+    label: 'Electric Cyan',
+    colors: ['#3FB1FF', '#00D1FF', '#007BFF'],
+    accent: '#00D1FF',
+    halo: 'rgba(0, 209, 255, 0.44)'
+  },
+  {
     label: 'Coral AI',
     colors: ['#FF9A8B', '#FF6A88', '#FF99AC'],
     accent: '#FF6A88',

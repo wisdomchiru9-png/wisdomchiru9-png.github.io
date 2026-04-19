@@ -5,8 +5,8 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#2C1810",
-  "theme_color": "#FF6A88",
+  "background_color": "#0D1117",
+  "theme_color": "#00D1FF",
   "description": "Beek-Na-Lah - Chiru Hymnal songs.",
   "icons": [
     {

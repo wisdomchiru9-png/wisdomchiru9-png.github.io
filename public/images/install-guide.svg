@@ -1,38 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2C1810"/>
-      <stop offset="100%" stop-color="#1A0F0A"/>
+      <stop offset="0%" stop-color="#161B22"/>
+      <stop offset="100%" stop-color="#0D1117"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="800" rx="48" fill="url(#bg)"/>
-  <rect x="40" y="40" width="1120" height="720" rx="40" fill="#2C1810" opacity="0.8"/>
+  <rect x="40" y="40" width="1120" height="720" rx="40" fill="#161B22" opacity="0.8"/>
 
-  <text x="100" y="140" font-size="38" font-family="Georgia, serif" fill="#F7F0E6" font-weight="700">Install Beek-Na-Lah</text>
-  <text x="100" y="185" font-size="38" font-family="Georgia, serif" fill="#F7F0E6" font-weight="700">Chiru Hymnal Songbook</text>
-  <text x="100" y="210" font-size="22" font-family="Trebuchet MS, sans-serif" fill="#A6968A">No Play Store needed. Just follow these steps.</text>
+  <text x="100" y="140" font-size="38" font-family="Georgia, serif" fill="#E6EDF3" font-weight="700">Install Beek-Na-Lah</text>
+  <text x="100" y="185" font-size="38" font-family="Georgia, serif" fill="#E6EDF3" font-weight="700">Chiru Hymnal Songbook</text>
+  <text x="100" y="210" font-size="22" font-family="Trebuchet MS, sans-serif" fill="#8B949E">No Play Store needed. Just follow these steps.</text>
 
   <g>
-    <rect x="100" y="250" width="1000" height="130" rx="24" fill="#1A0F0A" stroke="#2C1810"/>
-    <circle cx="150" cy="315" r="34" fill="#FF6A88"/>
-    <text x="150" y="325" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#ffffff" font-weight="700">1</text>
-    <text x="220" y="300" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#F7F0E6" font-weight="700">Open the download page</text>
-    <text x="220" y="335" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#A6968A">Go to beek-na-lah-59775.web.app/download.html</text>
+    <rect x="100" y="250" width="1000" height="130" rx="24" fill="#0D1117" stroke="#161B22"/>
+    <circle cx="150" cy="315" r="34" fill="#00D1FF"/>
+    <text x="150" y="325" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#0D1117" font-weight="700">1</text>
+    <text x="220" y="300" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#E6EDF3" font-weight="700">Open the download page</text>
+    <text x="220" y="335" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#8B949E">Go to beek-na-lah-59775.web.app/download.html</text>
   </g>
 
   <g>
-    <rect x="100" y="410" width="1000" height="130" rx="24" fill="#1A0F0A" stroke="#2C1810"/>
-    <circle cx="150" cy="475" r="34" fill="#4A90E2"/>
-    <text x="150" y="485" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#ffffff" font-weight="700">2</text>
-    <text x="220" y="460" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#F7F0E6" font-weight="700">Tap Download APK</text>
-    <text x="220" y="495" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#A6968A">If asked, allow installs from unknown apps for your browser.</text>
+    <rect x="100" y="410" width="1000" height="130" rx="24" fill="#0D1117" stroke="#161B22"/>
+    <circle cx="150" cy="475" r="34" fill="#3FB1FF"/>
+    <text x="150" y="485" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#0D1117" font-weight="700">2</text>
+    <text x="220" y="460" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#E6EDF3" font-weight="700">Tap Download APK</text>
+    <text x="220" y="495" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#8B949E">If asked, allow installs from unknown apps for your browser.</text>
   </g>
 
   <g>
-    <rect x="100" y="570" width="1000" height="130" rx="24" fill="#1A0F0A" stroke="#2C1810"/>
-    <circle cx="150" cy="635" r="34" fill="#FF6A88"/>
-    <text x="150" y="645" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#ffffff" font-weight="700">3</text>
-    <text x="220" y="620" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#F7F0E6" font-weight="700">Install and open the app</text>
-    <text x="220" y="655" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#A6968A">Open it once while online so it works offline later.</text>
+    <rect x="100" y="570" width="1000" height="130" rx="24" fill="#0D1117" stroke="#161B22"/>
+    <circle cx="150" cy="635" r="34" fill="#00D1FF"/>
+    <text x="150" y="645" text-anchor="middle" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#0D1117" font-weight="700">3</text>
+    <text x="220" y="620" font-size="28" font-family="Trebuchet MS, sans-serif" fill="#E6EDF3" font-weight="700">Install and open the app</text>
+    <text x="220" y="655" font-size="20" font-family="Trebuchet MS, sans-serif" fill="#8B949E">Open it once while online so it works offline later.</text>
   </g>
 </svg>
