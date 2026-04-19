@@ -1,13 +1,13 @@
 {
   "id": "/",
-  "name": "Beek-Na-Lah",
-  "short_name": "Beek-Na-Lah",
+  "name": "Bek Na Lah",
+  "short_name": "Bek Na Lah",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#2C1810",
-  "theme_color": "#FF6A88",
-  "description": "Beek-Na-Lah - Chiru Hymnal songs.",
+  "background_color": "#020617",
+  "theme_color": "#0EA5E9",
+  "description": "Bek Na Lah - Chiru Hymnal songs.",
   "icons": [
     {
       "src": "icons/icon-192.svg",
